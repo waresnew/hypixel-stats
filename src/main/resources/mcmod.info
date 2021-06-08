@@ -1,0 +1,16 @@
+[
+{
+  "modid": "hypixelstats",
+  "name": "Hypixel Stats",
+  "description": "Shows stats pre-game in a variety of modes",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["newwares"],
+  "credits": "newwares",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
