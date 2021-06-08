@@ -1,5 +1,6 @@
 package com.newwares.hypixelstats;
 
+import com.newwares.hypixelstats.events.ChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,6 +13,6 @@ public class Main {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-
+        MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
     }
 }
