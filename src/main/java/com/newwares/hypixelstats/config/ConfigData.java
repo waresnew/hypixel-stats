@@ -9,23 +9,25 @@ import java.io.IOException;
 
 public class ConfigData {
     private static ConfigData configData;
+    JsonObject jsonObject;
     private String apiKey;
     private File configFile;
-    JsonObject jsonObject;
     private boolean enabledSpeedUhc;
     private boolean enabledNormalSkywars;
+    private boolean enabledInsaneSkywars;
     private boolean enabledRankedSkywars;
     private boolean enabledBedwars;
+
+
+    private ConfigData() {
+
+    }
 
     public static ConfigData getInstance() {
         if (configData == null) {
             configData = new ConfigData();
         }
         return configData;
-    }
-
-    private ConfigData() {
-
     }
 
     public void init(File directory) throws IOException {
@@ -49,15 +51,25 @@ public class ConfigData {
         if (jsonObject.get("NormalSkywars") == null) {
             setEnabledNormalSkywars(true);
         }
+        if (jsonObject.get("InsaneSkywars") == null) {
+            setEnabledInsaneSkywars(true);
+        }
         if (jsonObject.get("RankedSkywars") == null) {
             setEnabledRankedSkywars(true);
         }
         if (jsonObject.get("Bedwars") == null) {
             setEnabledBedwars(true);
         }
-        if (apiKey == null || apiKey.equals("")) {
+        if (jsonObject.get("ApiKey") == null || jsonObject.get("ApiKey").getAsString().equals("")) {
             setApiKey("defaultKey");
         }
+
+        setEnabledBedwars(jsonObject.get("Bedwars").getAsBoolean());
+        setEnabledNormalSkywars(jsonObject.get("NormalSkywars").getAsBoolean());
+        setEnabledInsaneSkywars(jsonObject.get("InsaneSkywars").getAsBoolean());
+        setEnabledRankedSkywars(jsonObject.get("RankedSkywars").getAsBoolean());
+        setEnabledSpeedUhc(jsonObject.get("SpeedUHC").getAsBoolean());
+        setApiKey(jsonObject.get("ApiKey").getAsString());
     }
 
 
@@ -88,7 +100,7 @@ public class ConfigData {
 
     public void setEnabledNormalSkywars(boolean enabledNormalSkywars) throws IOException {
         this.enabledNormalSkywars = enabledNormalSkywars;
-        jsonObject.addProperty("NormalSkywars", enabledSpeedUhc);
+        jsonObject.addProperty("NormalSkywars", enabledNormalSkywars);
         JsonUtils.writeJson(jsonObject, configFile);
     }
 
@@ -98,7 +110,7 @@ public class ConfigData {
 
     public void setEnabledRankedSkywars(boolean enabledRankedSkywars) throws IOException {
         this.enabledRankedSkywars = enabledRankedSkywars;
-        jsonObject.addProperty("RankedSkywars", enabledSpeedUhc);
+        jsonObject.addProperty("RankedSkywars", enabledRankedSkywars);
         JsonUtils.writeJson(jsonObject, configFile);
     }
 
@@ -108,7 +120,17 @@ public class ConfigData {
 
     public void setEnabledBedwars(boolean enabledBedwars) throws IOException {
         this.enabledBedwars = enabledBedwars;
-        jsonObject.addProperty("Bedwars", enabledSpeedUhc);
+        jsonObject.addProperty("Bedwars", enabledBedwars);
+        JsonUtils.writeJson(jsonObject, configFile);
+    }
+
+    public boolean isEnabledInsaneSkywars() {
+        return enabledInsaneSkywars;
+    }
+
+    public void setEnabledInsaneSkywars(boolean enabledInsaneSkywars) throws IOException {
+        this.enabledInsaneSkywars = enabledInsaneSkywars;
+        jsonObject.addProperty("InsaneSkywars", enabledInsaneSkywars);
         JsonUtils.writeJson(jsonObject, configFile);
     }
 }

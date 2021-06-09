@@ -2,27 +2,27 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class BedwarsPlayer extends Player {
-    private int finalKills;
-    private int finalDeaths;
-    private int bedBreaks;
-    private int bedLosses;
-    private int level;
+public class BedwarsPlayer extends Player implements Translatable {
+    private int finalKills = 0;
+    private int finalDeaths = 0;
+    private int bedBreaks = 0;
+    private int bedLosses = 0;
+    private int level = 0;
 
-    public BedwarsPlayer(String uuid) {
-        super(uuid);
+    public BedwarsPlayer(String uuid, String username) {
+        super(uuid, username);
     }
 
     @Override
-    public void setLevel(int level) {
-        this.level = level;
+    public String translate() {
+        return "FKDR: " + this.getFkdr() + " BBLR: " + this.getBblr();
     }
 
     @Override
     public String getLevel() {
         ChatColour colour;
         if (level < 100) {
-            colour = ChatColour.DARK_GRAY;
+            colour = ChatColour.DARK_GREY;
         } else if (level < 200) {
             colour = ChatColour.WHITE;
         } else if (level < 300) {
@@ -47,13 +47,18 @@ public class BedwarsPlayer extends Player {
         return colour + String.valueOf(level) + "✫";
     }
 
+    @Override
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public String getBblr() {
         ChatColour colour;
-        double bblr = Double.parseDouble(String.format("%.2f", (double) bedBreaks / (double) bedLosses));
+        double bblr = Double.parseDouble(String.format("%.2f", (double) this.getBedBreaks() / (double) this.getBedLosses()));
         if (bblr < 1) {
-            colour = ChatColour.DARK_GRAY;
+            colour = ChatColour.DARK_GREY;
         } else if (bblr < 2) {
-            colour = ChatColour.GRAY;
+            colour = ChatColour.GREY;
         } else if (bblr < 4) {
             colour = ChatColour.WHITE;
         } else if (bblr < 6) {
@@ -72,45 +77,47 @@ public class BedwarsPlayer extends Player {
         return colour + String.valueOf(bblr);
     }
 
+    public int getFinalKills() {
+        return finalKills;
+    }
+
     public void setFinalKills(int finalKills) {
         this.finalKills = finalKills;
     }
 
-    public int getFinalKills() {
-        return finalKills;
+    public int getFinalDeaths() {
+        if (finalDeaths == 0) return 1;
+        return finalDeaths;
     }
 
     public void setFinalDeaths(int finalDeaths) {
         this.finalDeaths = finalDeaths;
     }
 
-    public int getFinalDeaths() {
-        return finalDeaths;
+    public int getBedBreaks() {
+        return bedBreaks;
     }
 
     public void setBedBreaks(int bedBreaks) {
         this.bedBreaks = bedBreaks;
     }
 
-    public int getBedBreaks() {
-        return bedBreaks;
+    public int getBedLosses() {
+        if (bedLosses == 0) return 1;
+        return bedLosses;
     }
 
     public void setBedLosses(int bedLosses) {
         this.bedLosses = bedLosses;
     }
 
-    public int getBedLosses() {
-        return bedLosses;
-    }
-
     public String getFkdr() {
         ChatColour colour;
-        double fkdr = Double.parseDouble(String.format("%.2f", (double) finalKills / (double) finalDeaths));
+        double fkdr = Double.parseDouble(String.format("%.2f", (double) this.getFinalKills() / (double) this.getFinalDeaths()));
         if (fkdr < 1) {
-            colour = ChatColour.DARK_GRAY;
+            colour = ChatColour.DARK_GREY;
         } else if (fkdr < 5) {
-            colour = ChatColour.GRAY;
+            colour = ChatColour.GREY;
         } else if (fkdr < 10) {
             colour = ChatColour.WHITE;
         } else if (fkdr < 20) {

@@ -9,15 +9,18 @@ import com.newwares.hypixelstats.utils.ChatUtils;
 import com.newwares.hypixelstats.utils.JsonUtils;
 import com.newwares.hypixelstats.utils.StringUtils;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HypixelApi {
-    private String game;
     private final String uuid;
+    private final String username;
+    private String game;
 
-    public HypixelApi(String game, String uuid) {
+    public HypixelApi(String game, String uuid, String username) {
         for (Game mode : Game.values()) {
             if (mode.name().equals(game)) {
                 this.game = mode.name();
@@ -25,81 +28,128 @@ public class HypixelApi {
             }
         }
         this.uuid = uuid;
+        this.username = username;
     }
 
     public void setMainStats(JsonObject jsonObject, Player player) {
-        player.setWs(jsonObject.get("win_streak").getAsInt());
-        player.setWins(jsonObject.get("wins").getAsInt());
-        player.setLosses(jsonObject.get("losses").getAsInt());
-        player.setKills(jsonObject.get("kills").getAsInt());
-        player.setDeaths(jsonObject.get("deaths").getAsInt());
+
+        if (jsonObject.has("rank")) {
+            player.setRank(jsonObject.get("rank").getAsString());
+        } else if (jsonObject.has("monthlyPackageRank")) {
+            player.setRank(jsonObject.get("monthlyPackageRank").getAsString());
+        } else if (jsonObject.has("newPackageRank")) {
+            player.setRank(jsonObject.get("newPackageRank").getAsString());
+        }
+
+        if (jsonObject.has("win_streak")) player.setWs(jsonObject.get("win_streak").getAsInt());
+        if (jsonObject.has("wins")) player.setWins(jsonObject.get("wins").getAsInt());
+        if (jsonObject.has("losses")) player.setLosses(jsonObject.get("losses").getAsInt());
+        if (jsonObject.has("kills")) player.setKills(jsonObject.get("kills").getAsInt());
+        if (jsonObject.has("deaths")) player.setDeaths(jsonObject.get("deaths").getAsInt());
     }
 
-    public void setStats() {
-        new Thread(() -> {
-            JsonObject jsonObject = JsonUtils.parseJson(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ConfigData.getInstance().getApiKey(), uuid)).getAsJsonObject().get("player").getAsJsonObject();
-            JsonObject statJsonObject = jsonObject.get("stats").getAsJsonObject();
-            if (statJsonObject.get("success").getAsString().equals("false") && statJsonObject.get("cause").getAsString().replace("\"", "").equals("Invalid API key")) {
-                ChatUtils.print(ChatColour.RED + "Invalid API key. Please run /api new to set it.");
-            } else {
-                switch (game) {
-                    case "BEDWARS": {
-                        if (!PlayerCache.getInstance().getBedwarsPlayers().containsKey(uuid)) {
-                            BedwarsPlayer player = new BedwarsPlayer(uuid);
-                            if (statJsonObject.get("success").getAsString().equals("true") && statJsonObject.get("player").getAsString().equals("null")) {
-                                player.setNicked(true);
+    public Player setStats() throws IOException, InterruptedException {
+        JsonObject wholejsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ConfigData.getInstance().getApiKey(), uuid))).getAsJsonObject();
+        JsonObject jsonObject = wholejsonObject.get("player").getAsJsonObject();
+        JsonObject statJsonObject = jsonObject.get("stats").getAsJsonObject();
+        if (wholejsonObject.get("success").getAsString().equals("false") && wholejsonObject.get("cause").getAsString().replace("\"", "").equals("Invalid API key")) {
+            ChatUtils.print(ChatColour.RED + "Invalid API key. Please run /api new to set it.");
+        } else {
+            switch (game) {
+                case "BEDWARS": {
+                    if (!PlayerCache.getInstance().getBedwarsPlayers().containsKey(uuid)) {
+                        BedwarsPlayer player = new BedwarsPlayer(uuid, username);
+                        if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
+                            player.setNicked(true);
+                        } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
+                            player.setBot(true);
+                        } else {
+                            if (statJsonObject.has("SkyWars")) {
+                                JsonObject bedwarsObject = statJsonObject.get("Bedwars").getAsJsonObject();
+                                if (bedwarsObject.has("achievements")) {
+                                    JsonObject achievements = jsonObject.get("achievements").getAsJsonObject();
+                                    if (achievements.has("bedwars_level"))
+                                        player.setLevel(achievements.get("bedwars_level").getAsInt());
+                                }
+                                if (bedwarsObject.has("winstreak"))
+                                    player.setWs(bedwarsObject.get("winstreak").getAsInt());
+                                if (bedwarsObject.has("wins_bedwars"))
+                                    player.setWins(bedwarsObject.get("wins_bedwars").getAsInt());
+                                if (bedwarsObject.has("losses_bedwars"))
+                                    player.setLosses(bedwarsObject.get("losses_bedwars").getAsInt());
+                                if (bedwarsObject.has("kills_bedwars"))
+                                    player.setKills(bedwarsObject.get("kills_bedwars").getAsInt());
+                                if (bedwarsObject.has("deaths_bedwars"))
+                                    player.setDeaths(bedwarsObject.get("deaths_bedwars").getAsInt());
+                                if (bedwarsObject.has("final_kills_bedwars"))
+                                    player.setFinalKills(bedwarsObject.get("final_kills_bedwars").getAsInt());
+                                if (bedwarsObject.has("final_deaths_bedwars"))
+                                    player.setFinalDeaths(bedwarsObject.get("final_deaths_bedwars").getAsInt());
+                                if (bedwarsObject.has("beds_broken_bedwars"))
+                                    player.setBedBreaks(bedwarsObject.get("beds_broken_bedwars").getAsInt());
+                                if (bedwarsObject.has("beds_lost_bedwars"))
+                                    player.setBedLosses(bedwarsObject.get("beds_lost_bedwars").getAsInt());
                             } else {
-                                JsonObject bedwarsObject = statJsonObject.get("BEDWARS").getAsJsonObject();
-                                player.setLevel(jsonObject.get("achievements").getAsJsonObject().get("bedwars_level").getAsInt());
-                                player.setWs(bedwarsObject.get("winstreak").getAsInt());
-                                player.setWins(bedwarsObject.get("wins_bedwars").getAsInt());
-                                player.setLosses(bedwarsObject.get("losses_bedwars").getAsInt());
-                                player.setKills(bedwarsObject.get("kills_bedwars").getAsInt());
-                                player.setDeaths(bedwarsObject.get("deaths_bedwars").getAsInt());
-                                player.setFinalKills(bedwarsObject.get("final_kills_bedwars").getAsInt());
-                                player.setFinalDeaths(bedwarsObject.get("final_deaths_bedwars").getAsInt());
-                                player.setBedBreaks(bedwarsObject.get("beds_broken_bedwars").getAsInt());
-                                player.setBedLosses(bedwarsObject.get("beds_lost_bedwars").getAsInt());
+                                player = new BedwarsPlayer(uuid, username);
+                                PlayerCache.getInstance().updateBedwarsPlayers(uuid, player);
                             }
-                            PlayerCache.getInstance().updateBedwarsPlayers(uuid, player);
                         }
+
+                        PlayerCache.getInstance().updateBedwarsPlayers(uuid, player);
                     }
-                    case "NORMAL_SKYWARS": {
-                        if (!PlayerCache.getInstance().getNormalSkywarsPlayers().containsKey(uuid)) {
-                            NormalSkywarsPlayer player = new NormalSkywarsPlayer(uuid);
-                            if (statJsonObject.get("success").getAsString().equals("true") && statJsonObject.get("player").getAsString().equals("null")) {
-                                player.setNicked(true);
-                            } else {
-                                JsonObject skywarsObject = statJsonObject.get("SKYWARS").getAsJsonObject();
+                    return PlayerCache.getInstance().getBedwarsPlayers().get(uuid);
+
+                }
+                case "NORMAL_SKYWARS": {
+                    if (!PlayerCache.getInstance().getNormalSkywarsPlayers().containsKey(uuid)) {
+                        NormalSkywarsPlayer player = new NormalSkywarsPlayer(uuid, username);
+                        if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
+                            player.setNicked(true);
+                        } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
+                            player.setBot(true);
+                        } else {
+                            if (statJsonObject.has("SkyWars")) {
+                                JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
                                 setMainStats(skywarsObject, player);
-                                player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_SOLO").getAsString().replace("kit_ranked_ranked_", "")));
-                                long highestTime = 0;
+                                if (skywarsObject.has("activeKit_SOLO"))
+                                    player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_SOLO").getAsString().substring(skywarsObject.get("activeKit_SOLO").getAsString().lastIndexOf("_") + 1).replace("_", " ")));                                int highestTime = 0;
                                 String mainKit = "none";
 
                                 for (Map.Entry<String, JsonElement> element : skywarsObject.entrySet()) {
                                     Matcher normalKitMatcher = Pattern.compile("time_played_kit_.+_solo_.+").matcher(element.getKey());
                                     if (normalKitMatcher.matches()) {
-                                        if (highestTime < element.getValue().getAsLong()) {
-                                            highestTime = element.getValue().getAsLong();
+                                        if (highestTime < element.getValue().getAsInt()) {
+                                            highestTime = element.getValue().getAsInt();
                                             mainKit = element.getKey().substring(element.getKey().lastIndexOf("_") + 1).replace("_", " ");
                                         }
                                     }
                                 }
                                 player.setMostUsedKit(StringUtils.toTitleCase(mainKit));
-                                player.setLevel(skywarsObject.get("levelFormatted").getAsString());
-                            }
-                            PlayerCache.getInstance().updateNormalSkywarsPlayers(uuid, player);
-                        }
-                    }
-                    case "INSANE_SKYWARS": {
-                        if (!PlayerCache.getInstance().getInsaneSkywarsPlayers().containsKey(uuid)) {
-                            InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(uuid);
-                            if (statJsonObject.get("success").getAsString().equals("true") && statJsonObject.get("player").getAsString().equals("null")) {
-                                player.setNicked(true);
+                                if (skywarsObject.has("levelFormatted"))
+                                    player.setLevel(skywarsObject.get("levelFormatted").getAsString());
                             } else {
-                                JsonObject skywarsObject = statJsonObject.get("SKYWARS").getAsJsonObject();
+                                player = new NormalSkywarsPlayer(uuid, username);
+                                PlayerCache.getInstance().updateNormalSkywarsPlayers(uuid, player);
+                            }
+                        }
+                        PlayerCache.getInstance().updateNormalSkywarsPlayers(uuid, player);
+                    }
+                    return PlayerCache.getInstance().getNormalSkywarsPlayers().get(uuid);
+
+                }
+                case "INSANE_SKYWARS": {
+                    if (!PlayerCache.getInstance().getInsaneSkywarsPlayers().containsKey(uuid)) {
+                        InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(uuid, username);
+                        if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
+                            player.setNicked(true);
+                        } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
+                            player.setBot(true);
+                        } else {
+                            if (statJsonObject.has("SkyWars")) {
+                                JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
                                 setMainStats(skywarsObject, player);
-                                player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_TEAMS").getAsString().replace("kit_attacking_team_", "")));
+                                if (skywarsObject.has("activeKit_TEAMS"))
+                                    player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_TEAMS").getAsString().substring(skywarsObject.get("activeKit_TEAMS").getAsString().lastIndexOf("_") + 1).replace("_", " ")));
                                 int highestTime = 0;
                                 String mainKit = "none";
                                 for (Map.Entry<String, JsonElement> element : skywarsObject.entrySet()) {
@@ -112,55 +162,81 @@ public class HypixelApi {
                                     }
                                 }
                                 player.setMostUsedKit(StringUtils.toTitleCase(mainKit));
-                                player.setLevel(skywarsObject.get("levelFormatted").getAsString());
-                            }
-                            PlayerCache.getInstance().updateInsaneSkywarsPlayers(uuid, player);
-                        }
-                    }
-                    case "RANKED_SKYWARS": {
-                        if (!PlayerCache.getInstance().getRankedSkywarsPlayers().containsKey(uuid)) {
-                            RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid);
-                            if (statJsonObject.get("success").getAsString().equals("true") && statJsonObject.get("player").getAsString().equals("null")) {
-                                player.setNicked(true);
+                                if (skywarsObject.has("levelFormatted"))
+                                    player.setLevel(skywarsObject.get("levelFormatted").getAsString());
                             } else {
-                                JsonObject skywarsObject = statJsonObject.get("SKYWARS").getAsJsonObject();
-                                player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_RANKED").getAsString().replace("kit_ranked_ranked_", "")));
-                                long highestTime = 0;
+                                player = new InsaneSkywarsPlayer(uuid, username);
+                                PlayerCache.getInstance().updateInsaneSkywarsPlayers(uuid, player);
+                            }
+                        }
+                        PlayerCache.getInstance().updateInsaneSkywarsPlayers(uuid, player);
+                    }
+                    return PlayerCache.getInstance().getInsaneSkywarsPlayers().get(uuid);
+                }
+                case "RANKED_SKYWARS": {
+                    if (!PlayerCache.getInstance().getRankedSkywarsPlayers().containsKey(uuid)) {
+                        RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, username);
+                        if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
+                            player.setNicked(true);
+                        } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
+                            player.setBot(true);
+                        } else {
+                            if (statJsonObject.has("SkyWars")) {
+                                JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
+                                if (skywarsObject.has("activeKit_RANKED"))
+                                    player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_RANKED").getAsString().replace("kit_ranked_ranked_", "")));
+                                int highestTime = 0;
                                 String mainKit = "none";
                                 for (Map.Entry<String, JsonElement> element : skywarsObject.entrySet()) {
                                     if (element.getKey().startsWith("time_played_kit_ranked_ranked_")) {
-                                        if (highestTime < element.getValue().getAsLong()) {
-                                            highestTime = element.getValue().getAsLong();
+                                        if (highestTime < element.getValue().getAsInt()) {
+                                            highestTime = element.getValue().getAsInt();
                                             mainKit = element.getKey().replace("time_played_kit_ranked_ranked_", "").replace("_", " ");
                                         }
                                     }
-
                                 }
                                 setMainStats(skywarsObject, player);
                                 player.setMostUsedKit(StringUtils.toTitleCase(mainKit));
-                                player.setLevel(skywarsObject.get("levelFormatted").getAsString());
-                            }
-                            PlayerCache.getInstance().updateRankedSkywarsPlayers(uuid, player);
-                        }
-                    }
-                    case "SPEED_UHC": {
-                        if (!PlayerCache.getInstance().getSpeedUHCPlayers().containsKey(uuid)) {
-                            SpeedUHCPlayer player = new SpeedUHCPlayer(uuid);
-                            if (statJsonObject.get("success").getAsString().equals("true") && statJsonObject.get("player").getAsString().equals("null")) {
-                                player.setNicked(true);
+                                if (skywarsObject.has("levelFormatted"))
+                                    player.setLevel(skywarsObject.get("levelFormatted").getAsString());
                             } else {
-                                JsonObject speedUHCObject = statJsonObject.get("SPEED_UHC").getAsJsonObject();
-                                setMainStats(speedUHCObject, player);
-                                player.setCurrentMastery(StringUtils.toTitleCase(speedUHCObject.get("activeMasterPerk").getAsString().replace("mastery_", "")));
-                                player.setCurrentKit(StringUtils.toTitleCase(speedUHCObject.get("activeKit_NORMAL").getAsString().replace("kit_basic_normal_", "")));
-                                player.setScore(speedUHCObject.get("score").getAsInt());
+                                player = new RankedSkywarsPlayer(uuid, username);
+                                PlayerCache.getInstance().updateRankedSkywarsPlayers(uuid, player);
                             }
-                            PlayerCache.getInstance().updateSpeedUHCPlayers(uuid, player);
                         }
+                        PlayerCache.getInstance().updateRankedSkywarsPlayers(uuid, player);
                     }
+                    return PlayerCache.getInstance().getRankedSkywarsPlayers().get(uuid);
+                }
+                case "SPEED_UHC": {
+                    if (!PlayerCache.getInstance().getSpeedUHCPlayers().containsKey(uuid)) {
+                        SpeedUHCPlayer player = new SpeedUHCPlayer(uuid, username);
+                        if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
+                            player.setNicked(true);
+                        } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
+                            player.setBot(true);
+                        } else {
+                            if (statJsonObject.has("SpeedUHC")) {
+                                JsonObject speedUHCObject = statJsonObject.get("SpeedUHC").getAsJsonObject();
+                                setMainStats(speedUHCObject, player);
+                                if (speedUHCObject.has("activeMasterPerk"))
+                                    player.setCurrentMastery(StringUtils.toTitleCase(speedUHCObject.get("activeMasterPerk").getAsString().replace("mastery_", "")));
+                                if (speedUHCObject.has("activeKit_NORMAL"))
+                                    player.setCurrentKit(StringUtils.toTitleCase(speedUHCObject.get("activeKit_NORMAL").getAsString().replace("kit_basic_normal_", "")));
+                                if (speedUHCObject.has("score"))
+                                    player.setScore(speedUHCObject.get("score").getAsInt());
+                            } else {
+                                player = new SpeedUHCPlayer(uuid, username);
+                                PlayerCache.getInstance().updateSpeedUHCPlayers(uuid, player);
+                            }
+                        }
+                        PlayerCache.getInstance().updateSpeedUHCPlayers(uuid, player);
+                    }
+                    return PlayerCache.getInstance().getSpeedUHCPlayers().get(uuid);
                 }
             }
-        }).start();
+        }
+        return null;
     }
 
 

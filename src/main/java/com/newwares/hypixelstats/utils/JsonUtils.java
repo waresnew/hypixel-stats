@@ -4,12 +4,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class JsonUtils {
+
     public static JsonElement parseJson(URL url) throws InterruptedException, IOException {
         JsonElement jsonElement;
         JsonParser parser = new JsonParser();
@@ -36,7 +38,9 @@ public class JsonUtils {
     }
 
     public static JsonElement parseJson(String jsonString) {
-        return new JsonParser().parse(jsonString);
+        JsonReader jsonReader = new JsonReader(new StringReader(jsonString));
+        jsonReader.setLenient(true);
+        return new JsonParser().parse(jsonReader);
     }
 
     public static void writeJson(JsonObject jsonObject, File file) throws IOException {
