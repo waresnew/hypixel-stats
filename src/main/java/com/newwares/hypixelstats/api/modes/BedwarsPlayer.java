@@ -2,12 +2,16 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class BedwarsStats extends Stats {
+public class BedwarsPlayer extends Player {
     private int finalKills;
     private int finalDeaths;
     private int bedBreaks;
     private int bedLosses;
     private int level;
+
+    public BedwarsPlayer(String uuid) {
+        super(uuid);
+    }
 
     @Override
     public void setLevel(int level) {

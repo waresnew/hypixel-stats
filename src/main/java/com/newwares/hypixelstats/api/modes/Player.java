@@ -2,7 +2,7 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public abstract class Stats {
+public abstract class Player {
     private int kills;
     private int deaths;
     private int wins;
@@ -10,6 +10,22 @@ public abstract class Stats {
     private int level;
     private int ws;
     private ChatColour rankColour;
+    private boolean nicked = false;
+    private String uuid;
+
+    public Player(String uuid) {
+        this.setUuid(uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.uuid.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return this.uuid.equals(object);
+    }
 
     public void setRank(String rank) {
         switch (rank) {
@@ -38,6 +54,14 @@ public abstract class Stats {
                 this.rankColour = ChatColour.DARK_GREEN;
             }
         }
+    }
+
+    public void setNicked(boolean nicked) {
+        this.nicked = nicked;
+    }
+
+    public boolean isNicked() {
+        return nicked;
     }
 
     public ChatColour getRankColour() {
@@ -80,9 +104,7 @@ public abstract class Stats {
         this.level = level;
     }
 
-    public String getLevel() {
-        return String.valueOf(level);
-    }
+    public abstract String getLevel();
 
     public void setWs(int ws) {
         this.ws = ws;
@@ -160,5 +182,13 @@ public abstract class Stats {
             colour = ChatColour.DARK_PURPLE;
         }
         return colour + String.valueOf(wlr);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
