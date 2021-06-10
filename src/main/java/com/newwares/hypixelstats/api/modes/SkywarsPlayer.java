@@ -38,6 +38,6 @@ public abstract class SkywarsPlayer extends Player implements Translatable {
 
     @Override
     public String translate() {
-        return "Kit: " + this.getCurrentKit() + " Main kit: " + this.getMostUsedKit();
+        return ChatColour.RESET.getColourCode() + "Kit: " + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Main kit: " + this.getMostUsedKit();
     }
 }

@@ -27,28 +27,6 @@ public class ChatReceivedEvent {
         List<EntityPlayer> entityPlayers = Minecraft.getMinecraft().theWorld.playerEntities;
         ArrayList<EntityPlayer> allPlayers = new ArrayList<>(entityPlayers);
         for (EntityPlayer player : allPlayers) {
-            switch (mode) {
-                case "ranked_normal": {
-                    if (ConfigData.getInstance().isEnabledRankedSkywars()) {
-                        players.add(new HypixelApi("RANKED_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
-                    }
-                    break;
-                }
-                case "teams_normal":
-                case "solo_normal": {
-                    if (ConfigData.getInstance().isEnabledNormalSkywars()) {
-                        players.add(new HypixelApi("NORMAL_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
-                    }
-                    break;
-                }
-                case "teams_insane":
-                case "solo_insane": {
-                    if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
-                        players.add(new HypixelApi("INSANE_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
-                    }
-                    break;
-                }
-            }
             switch (gametype) {
                 case "BEDWARS": {
                     if (ConfigData.getInstance().isEnabledBedwars()) {
@@ -63,6 +41,31 @@ public class ChatReceivedEvent {
                     }
                     break;
                 }
+
+                case "SKYWARS": {
+                    switch (mode) {
+                        case "ranked_normal": {
+                            if (ConfigData.getInstance().isEnabledRankedSkywars()) {
+                                players.add(new HypixelApi("RANKED_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
+                            }
+                            break;
+                        }
+                        case "teams_normal":
+                        case "solo_normal": {
+                            if (ConfigData.getInstance().isEnabledNormalSkywars()) {
+                                players.add(new HypixelApi("NORMAL_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
+                            }
+                            break;
+                        }
+                        case "teams_insane":
+                        case "solo_insane": {
+                            if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
+                                players.add(new HypixelApi("INSANE_SKYWARS", player.getUniqueID().toString().replace("-", ""), player.getName()).setStats());
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
         StatDisplayUtils.printStats(players);
@@ -70,28 +73,7 @@ public class ChatReceivedEvent {
 
     public void stat(String gametype, String mode, String username, boolean join) throws IOException, InterruptedException {
         String uuid = MojangApi.usernameToUuid(username);
-        switch (mode) {
-            case "ranked_normal": {
-                if (ConfigData.getInstance().isEnabledRankedSkywars()) {
-                    StatDisplayUtils.printStats(new HypixelApi("RANKED_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                }
-                break;
-            }
-            case "teams_normal":
-            case "solo_normal": {
-                if (ConfigData.getInstance().isEnabledNormalSkywars()) {
-                    StatDisplayUtils.printStats(new HypixelApi("NORMAL_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                }
-                break;
-            }
-            case "teams_insane":
-            case "solo_insane": {
-                if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
-                    StatDisplayUtils.printStats(new HypixelApi("INSANE_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                }
-                break;
-            }
-        }
+
         switch (gametype) {
             case "BEDWARS": {
                 if (ConfigData.getInstance().isEnabledBedwars()) {
@@ -106,6 +88,31 @@ public class ChatReceivedEvent {
                 }
                 break;
             }
+
+            case "SKYWARS": {
+                switch (mode) {
+                    case "ranked_normal": {
+                        if (ConfigData.getInstance().isEnabledRankedSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("RANKED_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
+                        }
+                        break;
+                    }
+                    case "teams_normal":
+                    case "solo_normal": {
+                        if (ConfigData.getInstance().isEnabledNormalSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("NORMAL_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
+                        }
+                        break;
+                    }
+                    case "teams_insane":
+                    case "solo_insane": {
+                        if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("INSANE_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -115,7 +122,7 @@ public class ChatReceivedEvent {
             JsonObject jsonObject;
             String msg = event.message.getUnformattedText();
             if (msg.startsWith("{\"server\":")) {
-                event.setCanceled(true);
+              //  event.setCanceled(true);
                 jsonObject = JsonUtils.parseJson(msg).getAsJsonObject();
                 if (jsonObject.get("mode") != null && jsonObject.get("map") != null) {
                     mode = jsonObject.get("mode").getAsString();
@@ -132,7 +139,7 @@ public class ChatReceivedEvent {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set api key");
+                ChatUtils.print(ChatColour.GREEN.getColourCode() + "HypixelStats found and set api key");
             } else if (event.message.getFormattedText().contains("§r§e has quit!")) {
                 if (mode != null && gametype != null) {
                     try {

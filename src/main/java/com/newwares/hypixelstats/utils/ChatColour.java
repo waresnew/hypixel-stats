@@ -24,6 +24,12 @@ public enum ChatColour {
     ITALIC("§o"),
     RESET("§r");
 
+    private final String colourCode;
     ChatColour(String colourCode) {
+        this.colourCode = colourCode;
+    }
+
+    public String getColourCode() {
+        return this.colourCode;
     }
 }

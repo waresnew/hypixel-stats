@@ -7,35 +7,30 @@ import java.util.ArrayList;
 public class StatDisplayUtils {
     public static void printStats(ArrayList<Player> players) {
         StringBuilder statString = new StringBuilder();
-        int i = 0;
         for (Player player : players) {
             if (!player.isBot()) {
                 if (player.isNicked()) {
-                    statString = new StringBuilder(ChatColour.RED + "[NICKED]" + player.getUsername());
+                    statString.append(ChatColour.RED.getColourCode()).append("[NICKED]").append(player.getUsername());
                 } else {
-                    i += 1;
-                    if (players.size() < i) {
-                        statString.append("[").append(player.getLevel()).append("] ").append(player.getRankColour()).append(player.getUsername()).append(ChatColour.RESET).append("WS: ").append(player.getWs()).append(" WLR: ").append(player.getWlr()).append(" KDR: ").append(player.getKdr()).append(" ").append(player.translate());
-                        statString.append("\n");
-                    } else {
-                        statString.append("[").append(player.getLevel()).append("] ").append(player.getRankColour()).append(player.getUsername()).append(ChatColour.RESET).append("WS: ").append(player.getWs()).append(" WLR: ").append(player.getWlr()).append(" KDR: ").append(player.getKdr()).append(" ").append(player.translate());
-                    }
+                    statString.append("[").append(player.getLevel()).append(ChatColour.RESET.getColourCode()).append("] ").append(player.getRankColour().getColourCode()).append(player.getUsername()).append(ChatColour.RESET.getColourCode()).append(" WS: ").append(player.getWs()).append(ChatColour.RESET.getColourCode()).append(" WLR: ").append(player.getWlr()).append(ChatColour.RESET.getColourCode()).append(" KDR: ").append(player.getKdr()).append(ChatColour.RESET.getColourCode()).append(" ").append(player.translate()).append("\n");
                 }
             }
-            ChatUtils.print(statString.toString());
         }
+        ChatUtils.print(statString.toString());
     }
 
     public static void printStats(Player player, boolean join) {
         if (!player.isBot()) {
             if (player.isNicked()) {
-                ChatUtils.print(ChatColour.RED + "[NICKED]" + player.getUsername());
+                ChatUtils.print(ChatColour.RED.getColourCode() + "[NICKED]" + player.getUsername());
             } else {
+                StringBuilder statString = new StringBuilder();
                 if (join) {
-                    ChatUtils.print(String.valueOf(ChatColour.BOLD) + ChatColour.GREEN + "+" + ChatColour.RESET + "[" + player.getLevel() + "] " + player.getRankColour() + player.getUsername() + ChatColour.RESET + "WS: " + player.getWs() + " WLR: " + player.getWlr() + " KDR: " + player.getKdr() + " " + player.translate());
+                    statString.append(ChatColour.BOLD.getColourCode()).append(ChatColour.GREEN.getColourCode()).append("+").append(ChatColour.RESET.getColourCode()).append("[").append(player.getLevel()).append(ChatColour.RESET.getColourCode()).append("] ").append(player.getRankColour().getColourCode()).append(player.getUsername()).append(ChatColour.RESET.getColourCode()).append(" WS: ").append(player.getWs()).append(ChatColour.RESET.getColourCode()).append(" WLR: ").append(player.getWlr()).append(ChatColour.RESET.getColourCode()).append(" KDR: ").append(player.getKdr()).append(ChatColour.RESET.getColourCode()).append(" ").append(player.translate()).append("\n");
                 } else {
-                    ChatUtils.print(String.valueOf(ChatColour.BOLD) + ChatColour.RED + "-" + ChatColour.RESET + "[" + player.getLevel() + "] " + player.getRankColour() + player.getUsername() + ChatColour.RESET + "WS: " + player.getWs() + " WLR: " + player.getWlr() + " KDR: " + player.getKdr() + " " + player.translate());
+                    statString.append(ChatColour.BOLD.getColourCode()).append(ChatColour.RED.getColourCode()).append("-").append(ChatColour.RESET.getColourCode()).append("[").append(player.getLevel()).append(ChatColour.RESET.getColourCode()).append("] ").append(player.getRankColour().getColourCode()).append(player.getUsername()).append(ChatColour.RESET.getColourCode()).append(" WS: ").append(player.getWs()).append(ChatColour.RESET.getColourCode()).append(" WLR: ").append(player.getWlr()).append(ChatColour.RESET.getColourCode()).append(" KDR: ").append(player.getKdr()).append(ChatColour.RESET.getColourCode()).append(" ").append(player.translate()).append("\n");
                 }
+                ChatUtils.print(statString.toString());
             }
         }
     }

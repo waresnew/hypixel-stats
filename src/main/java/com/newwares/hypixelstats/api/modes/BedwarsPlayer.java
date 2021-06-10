@@ -15,7 +15,7 @@ public class BedwarsPlayer extends Player implements Translatable {
 
     @Override
     public String translate() {
-        return "FKDR: " + this.getFkdr() + " BBLR: " + this.getBblr();
+        return "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BedwarsPlayer extends Player implements Translatable {
         } else {
             colour = ChatColour.RED;
         }
-        return colour + String.valueOf(level) + "✫";
+        return colour.getColourCode() + level + "✫";
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BedwarsPlayer extends Player implements Translatable {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour + String.valueOf(bblr);
+        return colour.getColourCode() + bblr;
     }
 
     public int getFinalKills() {
@@ -133,6 +133,6 @@ public class BedwarsPlayer extends Player implements Translatable {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour + String.valueOf(fkdr);
+        return colour.getColourCode() + fkdr;
     }
 }

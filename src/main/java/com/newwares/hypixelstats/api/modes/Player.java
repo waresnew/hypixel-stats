@@ -132,7 +132,7 @@ public abstract class Player implements Translatable {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour + String.valueOf(ws);
+        return colour.getColourCode() + ws;
     }
 
     public void setWs(int ws) {
@@ -161,7 +161,7 @@ public abstract class Player implements Translatable {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour + String.valueOf(kdr);
+        return colour.getColourCode() + kdr;
     }
 
     public String getWlr() {
@@ -186,7 +186,7 @@ public abstract class Player implements Translatable {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour + String.valueOf(wlr);
+        return colour.getColourCode() + wlr;
     }
 
     public String getUuid() {

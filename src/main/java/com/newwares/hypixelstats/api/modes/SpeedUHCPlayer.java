@@ -44,7 +44,7 @@ public class SpeedUHCPlayer extends Player implements Translatable {
         } else {
             level = 10;
         }
-        return ChatColour.LIGHT_PURPLE + String.valueOf(level) + "❋";
+        return ChatColour.LIGHT_PURPLE.getColourCode() + level + "❋";
     }
 
     public String getCurrentKit() {
@@ -69,6 +69,6 @@ public class SpeedUHCPlayer extends Player implements Translatable {
 
     @Override
     public String translate() {
-        return "Kit: " + this.getCurrentKit() + " Mastery: " + this.getCurrentMastery();
+        return ChatColour.RESET.getColourCode() + "Kit: " + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " + this.getCurrentMastery();
     }
 }
