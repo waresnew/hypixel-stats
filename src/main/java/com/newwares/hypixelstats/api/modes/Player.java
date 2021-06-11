@@ -2,7 +2,7 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public abstract class Player implements Translatable {
+public class Player implements Translatable {
     private int kills = 0;
     private int deaths = 0;
     private int wins = 0;
@@ -16,14 +16,8 @@ public abstract class Player implements Translatable {
     private boolean isBot;
 
     public Player(String uuid, String username) {
-        this.setUuid(uuid);
-        this.setUsername(username);
-    }
-
-    public abstract String getLevel();
-
-    public void setLevel(int level) {
-        this.level = level;
+        this.uuid = uuid;
+        this.username = username;
     }
 
     @Override
@@ -41,26 +35,30 @@ public abstract class Player implements Translatable {
             case "VIP":
             case "VIP_PLUS": {
                 this.rankColour = ChatColour.GREEN;
+                break;
             }
 
             case "MVP":
             case "MVP_PLUS": {
                 this.rankColour = ChatColour.AQUA;
+                break;
             }
 
             case "SUPERSTAR": {
                 this.rankColour = ChatColour.GOLD;
+                break;
             }
 
             case "YOUTUBER":
-            case "NORMAL":
             case "ADMIN": {
                 this.rankColour = ChatColour.RED;
+                break;
             }
 
             case "MODERATOR":
             case "GAME_MASTER": {
                 this.rankColour = ChatColour.DARK_GREEN;
+                break;
             }
         }
     }
@@ -211,5 +209,18 @@ public abstract class Player implements Translatable {
 
     public void setBot(boolean bot) {
         isBot = bot;
+    }
+
+    @Override
+    public String translate() {
+        return "[" + this.getLevel() + ChatColour.RESET.getColourCode() + "] " + this.getRankColour().getColourCode() + this.getUsername() + ChatColour.RESET.getColourCode() + " WS: " + this.getWs() + ChatColour.RESET.getColourCode() + " WLR: " + this.getWlr() + ChatColour.RESET.getColourCode() + " KDR: " + this.getKdr() + ChatColour.RESET.getColourCode() + " ";
+    }
+
+    public String getLevel() {
+        return String.valueOf(level);
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

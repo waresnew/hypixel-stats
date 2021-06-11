@@ -25,6 +25,7 @@ public enum ChatColour {
     RESET("§r");
 
     private final String colourCode;
+
     ChatColour(String colourCode) {
         this.colourCode = colourCode;
     }

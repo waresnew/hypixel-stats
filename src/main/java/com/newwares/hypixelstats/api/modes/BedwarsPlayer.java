@@ -2,20 +2,22 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class BedwarsPlayer extends Player implements Translatable {
+public class BedwarsPlayer extends PlayerDecorator implements Translatable {
+    private final Player player;
     private int finalKills = 0;
     private int finalDeaths = 0;
     private int bedBreaks = 0;
     private int bedLosses = 0;
     private int level = 0;
 
-    public BedwarsPlayer(String uuid, String username) {
-        super(uuid, username);
+    public BedwarsPlayer(Player player) {
+        super(player.getUuid(), player.getUsername());
+        this.player = player;
     }
 
     @Override
     public String translate() {
-        return "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
+        return player.translate() + "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
     }
 
     @Override
@@ -47,7 +49,6 @@ public class BedwarsPlayer extends Player implements Translatable {
         return colour.getColourCode() + level + "✫";
     }
 
-    @Override
     public void setLevel(int level) {
         this.level = level;
     }

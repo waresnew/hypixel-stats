@@ -2,23 +2,16 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class SpeedUHCPlayer extends Player implements Translatable {
-    private String kit = "Default";
+public class SpeedUHCPlayer extends PlayerDecorator implements Translatable {
+    private final Player player;
     private int level = 0;
     private String currentKit = "Default";
-    private String currentMastery = "Environmentalist";
+    private String currentMastery = "Wild specialist";
     private int score = 0;
 
-    public SpeedUHCPlayer(String uuid, String username) {
-        super(uuid, username);
-    }
-
-    public String getKit() {
-        return kit;
-    }
-
-    public void setKit(String kit) {
-        this.kit = kit;
+    public SpeedUHCPlayer(Player player) {
+        super(player.getUuid(), player.getUsername());
+        this.player = player;
     }
 
     @Override
@@ -69,6 +62,6 @@ public class SpeedUHCPlayer extends Player implements Translatable {
 
     @Override
     public String translate() {
-        return ChatColour.RESET.getColourCode() + "Kit: " + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " + this.getCurrentMastery();
+        return player.translate() + ChatColour.RESET.getColourCode() + "AK: " + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " + this.getCurrentMastery();
     }
 }
