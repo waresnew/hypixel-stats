@@ -25,8 +25,10 @@ public class Main {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
-        MinecraftForge.EVENT_BUS.register(new GameEvent());
+        ChatReceivedEvent chatReceivedEvent = new ChatReceivedEvent();
+        GameEvent gameEvent = new GameEvent();
+        MinecraftForge.EVENT_BUS.register(chatReceivedEvent);
+        MinecraftForge.EVENT_BUS.register(gameEvent);
         ClientCommandHandler.instance.registerCommand(new StatCommand());
     }
 }

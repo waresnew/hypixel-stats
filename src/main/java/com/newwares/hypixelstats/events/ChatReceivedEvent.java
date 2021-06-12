@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.events;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.MojangApi;
+import com.newwares.hypixelstats.api.modes.factories.PlayerFactory;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
@@ -41,7 +42,12 @@ public class ChatReceivedEvent {
                         }
 
                         for (NetworkPlayerInfo playerInfo : copy) {
-                            StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+                            if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
+                                ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
+                            } else {
+                                StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+
+                            }
                         }
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
@@ -57,21 +63,24 @@ public class ChatReceivedEvent {
             }
             ChatUtils.print(ChatColour.GREEN.getColourCode() + "HypixelStats found and set api key");
         } else if (event.message.getFormattedText().contains("§r§e has quit!")) {
-            if (mode != null && gametype != null) {
-                try {
-                    String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
-                    String uuid = MojangApi.usernameToUuid(username);
-                    if (uuid != null) {
-                        StatDisplayUtils.stat(gametype, mode, uuid, username, false);
-                    } else {
-                        ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
-                    }
+            new Thread(() -> {
+                if (mode != null && gametype != null) {
+                    try {
+                        String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
+                        String uuid = MojangApi.usernameToUuid(username);
+                        if (uuid != null) {
+                            StatDisplayUtils.stat(gametype, mode, uuid, username, false);
+                        } else {
+                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                        }
 
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
+            }).start();
         } else if (event.message.getFormattedText().contains("§r§e has joined")) {
+            new Thread(() -> {
             if (mode != null && gametype != null) {
                 try {
                     String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
@@ -85,6 +94,7 @@ public class ChatReceivedEvent {
                     e.printStackTrace();
                 }
             }
+        }).start();
         }
 
     }
