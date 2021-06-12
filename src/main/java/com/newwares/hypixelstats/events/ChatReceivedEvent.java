@@ -2,7 +2,6 @@ package com.newwares.hypixelstats.events;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.MojangApi;
-import com.newwares.hypixelstats.api.modes.Game;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
@@ -11,6 +10,7 @@ import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.IOException;
@@ -21,19 +21,18 @@ public class ChatReceivedEvent {
     String mode;
     String gametype;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientChatReceived(ClientChatReceivedEvent event) {
-        new Thread(() -> {
-            JsonObject jsonObject;
-            String msg = event.message.getUnformattedText();
-            if (msg.startsWith("{\"server\":")) {
-                event.setCanceled(true);
-                jsonObject = JsonUtils.parseJson(msg).getAsJsonObject();
-                if (jsonObject.get("mode") != null && jsonObject.get("map") != null) {
-                    mode = jsonObject.get("mode").getAsString();
-                    gametype = jsonObject.get("gametype").getAsString();
-                    ChatUtils.print("mode " + mode);
-                    ChatUtils.print("gametype " + gametype);
+
+        final JsonObject[] jsonObject = new JsonObject[1];
+        String msg = event.message.getUnformattedText();
+        if (msg.startsWith("{\"server\":")) {
+            // event.setCanceled(true);
+            new Thread(() -> {
+                jsonObject[0] = JsonUtils.parseJson(msg).getAsJsonObject();
+                if (jsonObject[0].get("mode") != null && jsonObject[0].get("map") != null) {
+                    mode = jsonObject[0].get("mode").getAsString();
+                    gametype = jsonObject[0].get("gametype").getAsString();
                     try {
                         Collection<NetworkPlayerInfo> players = Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
                         ArrayList<NetworkPlayerInfo> copy;
@@ -47,45 +46,48 @@ public class ChatReceivedEvent {
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
+
                 }
-            } else if (msg.startsWith("Your new API key is")) {
+            }).start();
+        } else if (msg.startsWith("Your new API key is")) {
+            try {
+                ConfigData.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ChatUtils.print(ChatColour.GREEN.getColourCode() + "HypixelStats found and set api key");
+        } else if (event.message.getFormattedText().contains("§r§e has quit!")) {
+            if (mode != null && gametype != null) {
                 try {
-                    ConfigData.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
-                } catch (IOException e) {
+                    String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
+                    String uuid = MojangApi.usernameToUuid(username);
+                    if (uuid != null) {
+                        StatDisplayUtils.stat(gametype, mode, uuid, username, false);
+                    } else {
+                        ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                    }
+
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                ChatUtils.print(ChatColour.GREEN.getColourCode() + "HypixelStats found and set api key");
-            } else if (event.message.getFormattedText().contains("§r§e has quit!")) {
-                if (mode != null && gametype != null) {
-                    try {
-                        String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
-                        String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null) {
-                            StatDisplayUtils.stat(gametype, mode, uuid, username, false);
-                        } else {
-                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
-                        }
-
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+            }
+        } else if (event.message.getFormattedText().contains("§r§e has joined")) {
+            if (mode != null && gametype != null) {
+                try {
+                    String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
+                    String uuid = MojangApi.usernameToUuid(username);
+                    if (uuid != null) {
+                        StatDisplayUtils.stat(gametype, mode, uuid, username, true);
+                    } else {
+                        ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
                     }
-                }
-            } else if (event.message.getFormattedText().contains("§r§e has joined")) {
-                if (mode != null && gametype != null) {
-                    try {
-                        String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
-                        String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null) {
-                            StatDisplayUtils.stat(gametype, mode, uuid, username, true);
-                        } else {
-                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
-                        }
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-        }).start();
+        }
+
     }
+
 
 }
