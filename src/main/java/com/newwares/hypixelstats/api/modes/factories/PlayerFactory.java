@@ -6,8 +6,6 @@ import com.newwares.hypixelstats.api.modes.*;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
 
-import java.io.IOException;
-
 public abstract class PlayerFactory {
     public static Player switchModes(JsonObject playerObject, String game, String uuid, String username) {
         switch (game) {

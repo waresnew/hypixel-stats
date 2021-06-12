@@ -51,6 +51,7 @@ public class StatDisplayUtils {
             }
         }
     }
+
     public static void printStats(Player player, boolean join) {
         if (!player.isBot()) {
             if (player.isNicked()) {

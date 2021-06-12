@@ -5,6 +5,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class GameEvent {
     private World world;
 
@@ -15,7 +18,7 @@ public class GameEvent {
         }
         if (world != Minecraft.getMinecraft().theWorld) {
             this.world = Minecraft.getMinecraft().theWorld;
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw");
+            Executors.newSingleThreadScheduledExecutor().schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw"), 1000, TimeUnit.MILLISECONDS);
         }
     }
 }

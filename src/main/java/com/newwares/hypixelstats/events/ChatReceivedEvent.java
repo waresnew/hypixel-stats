@@ -1,8 +1,8 @@
 package com.newwares.hypixelstats.events;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.HypixelApi;
 import com.newwares.hypixelstats.api.MojangApi;
+import com.newwares.hypixelstats.api.modes.Game;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
@@ -14,12 +14,12 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class ChatReceivedEvent {
     String mode;
     String gametype;
-
-
 
     @SubscribeEvent
     public void onClientChatReceived(ClientChatReceivedEvent event) {
@@ -27,14 +27,21 @@ public class ChatReceivedEvent {
             JsonObject jsonObject;
             String msg = event.message.getUnformattedText();
             if (msg.startsWith("{\"server\":")) {
-                //  event.setCanceled(true);
+                event.setCanceled(true);
                 jsonObject = JsonUtils.parseJson(msg).getAsJsonObject();
                 if (jsonObject.get("mode") != null && jsonObject.get("map") != null) {
                     mode = jsonObject.get("mode").getAsString();
                     gametype = jsonObject.get("gametype").getAsString();
+                    ChatUtils.print("mode " + mode);
+                    ChatUtils.print("gametype " + gametype);
                     try {
-                        for (NetworkPlayerInfo playerInfo : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
-                            //TODO concurrentmodificationexception
+                        Collection<NetworkPlayerInfo> players = Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
+                        ArrayList<NetworkPlayerInfo> copy;
+                        synchronized (players) {
+                            copy = new ArrayList<>(players);
+                        }
+
+                        for (NetworkPlayerInfo playerInfo : copy) {
                             StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
                         }
                     } catch (IOException | InterruptedException e) {

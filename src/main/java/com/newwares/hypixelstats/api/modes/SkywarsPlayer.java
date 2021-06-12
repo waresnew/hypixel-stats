@@ -4,7 +4,7 @@ import com.newwares.hypixelstats.utils.ChatColour;
 
 public abstract class SkywarsPlayer extends PlayerDecorator {
     private final Player player;
-    private String level = ChatColour.GREY + "0☆";
+    private String level = ChatColour.GREY.getColourCode() + "0☆";
     private String currentKit = "Default";
     private String mostUsedKit = "Default";
 

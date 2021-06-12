@@ -62,6 +62,6 @@ public class SpeedUHCPlayer extends PlayerDecorator {
 
     @Override
     public String translate() {
-        return genericTranslate() + ChatColour.RESET.getColourCode() + "AK: " +  ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " +  ChatColour.GREY.getColourCode() + this.getCurrentMastery() +  ChatColour.RESET.getColourCode();
+        return genericTranslate() + ChatColour.RESET.getColourCode() + "AK: " + ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " + ChatColour.GREY.getColourCode() + this.getCurrentMastery() + ChatColour.RESET.getColourCode();
     }
 }

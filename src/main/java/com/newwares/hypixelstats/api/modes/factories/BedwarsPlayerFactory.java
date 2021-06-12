@@ -55,7 +55,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
                 PlayerCache.getInstance().updateCache(uuid, player);
             }
         }
-            return PlayerCache.getInstance().getCache(uuid, BedwarsPlayer.class);
+        return PlayerCache.getInstance().getCache(uuid, BedwarsPlayer.class);
 
     }
 }

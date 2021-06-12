@@ -19,12 +19,12 @@ public class PlayerCache {
     }
 
     public void updateCache(String uuid, Object player) {
-        nameCache.put(uuid, player);
+        nameCache.put(uuid + player.getClass().toString(), player);
     }
 
     public <T> T getCache(String uuid, Class<T> type) {
-        if (nameCache.containsKey(uuid)) {
-            return type.cast(nameCache.get(uuid));
+        if (nameCache.containsKey(uuid + type.toString())) {
+            return type.cast(nameCache.get(uuid + type));
         } else {
             return null;
         }

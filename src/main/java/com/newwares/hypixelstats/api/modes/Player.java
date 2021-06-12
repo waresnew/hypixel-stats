@@ -1,7 +1,6 @@
 package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
-import com.newwares.hypixelstats.utils.ChatUtils;
 
 public class Player {
 
