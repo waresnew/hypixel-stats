@@ -2,7 +2,7 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public abstract class SkywarsPlayer extends PlayerDecorator implements Translatable {
+public abstract class SkywarsPlayer extends PlayerDecorator {
     private final Player player;
     private String level = ChatColour.GREY + "0☆";
     private String currentKit = "Default";
@@ -40,6 +40,6 @@ public abstract class SkywarsPlayer extends PlayerDecorator implements Translata
 
     @Override
     public String translate() {
-        return player.translate() + ChatColour.RESET.getColourCode() + "AK: " + ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " MK: " + ChatColour.GREY.getColourCode() + this.getMostUsedKit() + ChatColour.RESET.getColourCode();
+        return genericTranslate() + ChatColour.RESET.getColourCode() + "AK: " + ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " MK: " + ChatColour.GREY.getColourCode() + this.getMostUsedKit() + ChatColour.RESET.getColourCode();
     }
 }

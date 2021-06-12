@@ -1,8 +1,10 @@
 package com.newwares.hypixelstats;
 
+import com.newwares.hypixelstats.commands.StatCommand;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.events.ChatReceivedEvent;
 import com.newwares.hypixelstats.events.GameEvent;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -25,5 +27,6 @@ public class Main {
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new ChatReceivedEvent());
         MinecraftForge.EVENT_BUS.register(new GameEvent());
+        ClientCommandHandler.instance.registerCommand(new StatCommand());
     }
 }

@@ -1,8 +1,9 @@
 package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
+import com.newwares.hypixelstats.utils.ChatUtils;
 
-public class BedwarsPlayer extends PlayerDecorator implements Translatable {
+public class BedwarsPlayer extends PlayerDecorator {
     private final Player player;
     private int finalKills = 0;
     private int finalDeaths = 0;
@@ -15,9 +16,10 @@ public class BedwarsPlayer extends PlayerDecorator implements Translatable {
         this.player = player;
     }
 
+
     @Override
     public String translate() {
-        return player.translate() + "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
+        return genericTranslate() + "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
     }
 
     @Override

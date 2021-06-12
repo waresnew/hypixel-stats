@@ -19,49 +19,7 @@ public class ChatReceivedEvent {
     String mode;
     String gametype;
 
-    public void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException, InterruptedException {
 
-        switch (gametype) {
-            case "BEDWARS": {
-                if (ConfigData.getInstance().isEnabledBedwars()) {
-                    StatDisplayUtils.printStats(new HypixelApi("BEDWARS", uuid.replace("-", ""), username).setStats(), join);
-                }
-
-            }
-
-            case "SPEED_UHC": {
-                if (ConfigData.getInstance().isEnabledSpeedUhc()) {
-                    StatDisplayUtils.printStats(new HypixelApi("SPEED_UHC", uuid.replace("-", ""), username).setStats(), join);
-                }
-
-            }
-
-            case "SKYWARS": {
-                switch (mode) {
-                    case "ranked_normal": {
-                        if (ConfigData.getInstance().isEnabledRankedSkywars()) {
-                            StatDisplayUtils.printStats(new HypixelApi("RANKED_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                        }
-
-                    }
-                    case "teams_normal":
-                    case "solo_normal": {
-                        if (ConfigData.getInstance().isEnabledNormalSkywars()) {
-                            StatDisplayUtils.printStats(new HypixelApi("NORMAL_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                        }
-
-                    }
-                    case "teams_insane":
-                    case "solo_insane": {
-                        if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
-                            StatDisplayUtils.printStats(new HypixelApi("INSANE_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                        }
-
-                    }
-                }
-            }
-        }
-    }
 
     @SubscribeEvent
     public void onClientChatReceived(ClientChatReceivedEvent event) {
@@ -77,7 +35,7 @@ public class ChatReceivedEvent {
                     try {
                         for (NetworkPlayerInfo playerInfo : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
                             //TODO concurrentmodificationexception
-                            stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+                            StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
                         }
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
@@ -94,7 +52,13 @@ public class ChatReceivedEvent {
                 if (mode != null && gametype != null) {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
-                        stat(gametype, mode, MojangApi.usernameToUuid(username), username, false);
+                        String uuid = MojangApi.usernameToUuid(username);
+                        if (uuid != null) {
+                            StatDisplayUtils.stat(gametype, mode, uuid, username, false);
+                        } else {
+                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                        }
+
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -103,7 +67,12 @@ public class ChatReceivedEvent {
                 if (mode != null && gametype != null) {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
-                        stat(gametype, mode, MojangApi.usernameToUuid(username), username, true);
+                        String uuid = MojangApi.usernameToUuid(username);
+                        if (uuid != null) {
+                            StatDisplayUtils.stat(gametype, mode, uuid, username, true);
+                        } else {
+                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                        }
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }

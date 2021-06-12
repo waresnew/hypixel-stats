@@ -1,23 +1,29 @@
 package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
+import com.newwares.hypixelstats.utils.ChatUtils;
 
-public class Player implements Translatable {
-    private int kills = 0;
-    private int deaths = 0;
-    private int wins = 0;
-    private int losses = 0;
-    private int level = 0;
-    private int ws = 0;
-    private ChatColour rankColour = ChatColour.GREY;
-    private boolean nicked = false;
-    private String uuid;
-    private String username;
-    private boolean isBot;
+public class Player {
+
+    int kills = 0;
+    int deaths = 0;
+    int wins = 0;
+    int losses = 0;
+    int level = 0;
+    int ws = 0;
+    ChatColour rankColour = ChatColour.GREY;
+    boolean nicked = false;
+    String uuid;
+    String username;
+    boolean isBot;
 
     public Player(String uuid, String username) {
         this.uuid = uuid;
         this.username = username;
+    }
+
+    public String translate() {
+        return null;
     }
 
     @Override
@@ -211,8 +217,7 @@ public class Player implements Translatable {
         isBot = bot;
     }
 
-    @Override
-    public String translate() {
+    public String genericTranslate() {
         return "[" + this.getLevel() + ChatColour.RESET.getColourCode() + "] " + this.getRankColour().getColourCode() + this.getUsername() + ChatColour.RESET.getColourCode() + " WS: " + this.getWs() + ChatColour.RESET.getColourCode() + " WLR: " + this.getWlr() + ChatColour.RESET.getColourCode() + " KDR: " + this.getKdr() + ChatColour.RESET.getColourCode() + " ";
     }
 
@@ -223,4 +228,6 @@ public class Player implements Translatable {
     public void setLevel(int level) {
         this.level = level;
     }
+
+
 }
