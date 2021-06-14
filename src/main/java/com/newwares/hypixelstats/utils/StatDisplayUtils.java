@@ -10,6 +10,10 @@ import java.util.ArrayList;
 public class StatDisplayUtils {
     private static final ArrayList<String> playerList = new ArrayList<>();
 
+    public static void clearPlayerList() {
+        playerList.clear();
+    }
+
     public static void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException, InterruptedException {
         if (!playerList.contains(uuid)) {
             switch (gametype) {

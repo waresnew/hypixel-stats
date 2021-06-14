@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.events;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.utils.JsonUtils;
+import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -22,7 +23,7 @@ public class GameEvent {
         if (world != Minecraft.getMinecraft().theWorld) {
             this.world = Minecraft.getMinecraft().theWorld;
             Executors.newSingleThreadScheduledExecutor().schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw"), 500, TimeUnit.MILLISECONDS);
-
+            StatDisplayUtils.clearPlayerList();
         }
     }
 
