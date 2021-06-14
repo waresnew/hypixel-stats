@@ -2,7 +2,6 @@ package com.newwares.hypixelstats.events;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.MojangApi;
-import com.newwares.hypixelstats.api.modes.factories.PlayerFactory;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
@@ -81,20 +80,20 @@ public class ChatReceivedEvent {
             }).start();
         } else if (event.message.getFormattedText().contains("§r§e has joined")) {
             new Thread(() -> {
-            if (mode != null && gametype != null) {
-                try {
-                    String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
-                    String uuid = MojangApi.usernameToUuid(username);
-                    if (uuid != null) {
-                        StatDisplayUtils.stat(gametype, mode, uuid, username, true);
-                    } else {
-                        ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                if (mode != null && gametype != null) {
+                    try {
+                        String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
+                        String uuid = MojangApi.usernameToUuid(username);
+                        if (uuid != null) {
+                            StatDisplayUtils.stat(gametype, mode, uuid, username, true);
+                        } else {
+                            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
+            }).start();
         }
 
     }

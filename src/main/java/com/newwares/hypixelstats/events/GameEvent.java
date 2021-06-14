@@ -1,11 +1,8 @@
 package com.newwares.hypixelstats.events;
 
-import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.utils.JsonUtils;
 import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -13,8 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class GameEvent {
-    private World world;
     boolean fromLimbo;
+    private World world;
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START || Minecraft.getMinecraft().theWorld == null) {
