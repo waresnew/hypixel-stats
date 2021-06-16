@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class GameEvent {
-    boolean fromLimbo;
     private World world;
 
     @SubscribeEvent

@@ -39,13 +39,14 @@ public class ChatReceivedEvent {
                         synchronized (players) {
                             copy = new ArrayList<>(players);
                         }
+                        if (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS")) {
+                            for (NetworkPlayerInfo playerInfo : copy) {
+                                if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
+                                    ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
+                                } else {
+                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
 
-                        for (NetworkPlayerInfo playerInfo : copy) {
-                            if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
-                                ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
-                            } else {
-                                StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
-
+                                }
                             }
                         }
                     } catch (IOException | InterruptedException e) {
