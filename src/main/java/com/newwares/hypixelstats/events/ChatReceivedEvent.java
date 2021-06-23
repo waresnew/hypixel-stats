@@ -20,14 +20,20 @@ import java.util.Collection;
 public class ChatReceivedEvent {
     String mode;
     String gametype;
+    private static final ArrayList<String> playerList = new ArrayList<>();
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void clearPlayerList() {
+        playerList.clear();
+    }
+    @SubscribeEvent(receiveCanceled = true)
     public void onClientChatReceived(ClientChatReceivedEvent event) {
 
         final JsonObject[] jsonObject = new JsonObject[1];
         String msg = event.message.getUnformattedText();
         if (msg.startsWith("{\"server\":")) {
-            // event.setCanceled(true);
+            if (!event.isCanceled()) {
+                event.setCanceled(true);
+            }
             new Thread(() -> {
                 jsonObject[0] = JsonUtils.parseJson(msg).getAsJsonObject();
                 if (jsonObject[0].get("mode") != null && jsonObject[0].get("map") != null) {
@@ -44,8 +50,10 @@ public class ChatReceivedEvent {
                                 if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
                                     ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
                                 } else {
-                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
-
+                                    if (!playerList.contains(playerInfo.getGameProfile().getId().toString())) {
+                                        StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+                                        playerList.add(playerInfo.getGameProfile().getId().toString());
+                                    }
                                 }
                             }
                         }
@@ -68,8 +76,9 @@ public class ChatReceivedEvent {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
                         String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null) {
+                        if (uuid != null && !playerList.contains(uuid)) {
                             StatDisplayUtils.stat(gametype, mode, uuid, username, false);
+                            playerList.add(uuid);
                         } else {
                             ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
                         }
@@ -85,8 +94,10 @@ public class ChatReceivedEvent {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
                         String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null) {
+                        if (uuid != null && !playerList.contains(uuid)) {
                             StatDisplayUtils.stat(gametype, mode, uuid, username, true);
+                            playerList.add(uuid);
+
                         } else {
                             ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
                         }

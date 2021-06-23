@@ -20,7 +20,7 @@ public class GameEvent {
         if (world != Minecraft.getMinecraft().theWorld) {
             this.world = Minecraft.getMinecraft().theWorld;
             Executors.newSingleThreadScheduledExecutor().schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw"), 500, TimeUnit.MILLISECONDS);
-            StatDisplayUtils.clearPlayerList();
+            ChatReceivedEvent.clearPlayerList();
         }
     }
 
