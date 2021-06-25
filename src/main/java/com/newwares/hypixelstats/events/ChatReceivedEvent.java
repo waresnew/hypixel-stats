@@ -94,10 +94,11 @@ public class ChatReceivedEvent {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has joined"));
                         String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null && !playerList.contains(uuid)) {
-                            StatDisplayUtils.stat(gametype, mode, uuid, username, true);
-                            playerList.add(uuid);
-
+                        if (uuid != null) {
+                            if (!playerList.contains(uuid)) {
+                                StatDisplayUtils.stat(gametype, mode, uuid, username, true);
+                                playerList.add(uuid);
+                            }
                         } else {
                             ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
                         }
