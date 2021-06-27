@@ -27,17 +27,6 @@ public class ChatReceivedEvent {
     }
 
     @SubscribeEvent
-    public void jump(LivingEvent.LivingJumpEvent event) {
-        if (event.entity == Minecraft.getMinecraft().thePlayer) {
-            List<String> sidebarScores = ScoreboardUtils.getSidebarLines();
-            for (String sidebarScore : sidebarScores) {
-                ChatUtils.print(sidebarScore);
-            }
-            //ChatUtils.print(ScoreboardUtils.getBoardTitle().replaceAll("§[0123456789abcdefklmnor]", ""));
-        }
-    }
-
-    @SubscribeEvent
     public void onClientChatReceived(ClientChatReceivedEvent event) {
         gametype = ScoreboardUtils.getBoardTitle().replaceAll("§[0123456789abcdefklmnor]", "");
         List<String> sidebarScores = ScoreboardUtils.getSidebarLines();
