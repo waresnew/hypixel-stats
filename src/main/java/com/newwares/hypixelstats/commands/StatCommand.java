@@ -36,7 +36,7 @@ public class StatCommand extends CommandBase {
                 if (uuid != null) {
                     switch (args[0]) {
                         case "bw": {
-                            StatDisplayUtils.stat("BEDWARS", "a", uuid, username, true);
+                            StatDisplayUtils.stat("BED WARS", "a", uuid, username, true);
                             break;
                         }
                         case "nsw": {
@@ -52,7 +52,7 @@ public class StatCommand extends CommandBase {
                             break;
                         }
                         case "uhc": {
-                            StatDisplayUtils.stat("SPEED_UHC", "a", uuid, username, true);
+                            StatDisplayUtils.stat("SPEED UHC", "a", uuid, username, true);
                             break;
                         }
                     }
