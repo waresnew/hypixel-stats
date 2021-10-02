@@ -11,14 +11,14 @@ public class StatDisplayUtils {
     public static void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException, InterruptedException {
 
             switch (gametype) {
-                case "BED WARS": {
+                case "BEDWARS": {
                     if (ConfigData.getInstance().isEnabledBedwars()) {
                         StatDisplayUtils.printStats(new HypixelApi("BEDWARS", uuid.replace("-", ""), username).setStats(), join);
                     }
                     break;
                 }
 
-                case "SPEED UHC": {
+                case "SPEED_UHC": {
                     if (ConfigData.getInstance().isEnabledSpeedUhc()) {
                         StatDisplayUtils.printStats(new HypixelApi("SPEED_UHC", uuid.replace("-", ""), username).setStats(), join);
                     }

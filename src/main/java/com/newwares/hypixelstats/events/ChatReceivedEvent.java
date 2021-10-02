@@ -3,48 +3,67 @@ package com.newwares.hypixelstats.events;
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.MojangApi;
 import com.newwares.hypixelstats.config.ConfigData;
-import com.newwares.hypixelstats.utils.*;
+import com.newwares.hypixelstats.utils.ChatColour;
+import com.newwares.hypixelstats.utils.ChatUtils;
+import com.newwares.hypixelstats.utils.JsonUtils;
+import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class ChatReceivedEvent {
     String mode;
     String gametype;
-    public static final ArrayList<String> playerList = new ArrayList<>();
+    private static final ArrayList<String> playerList = new ArrayList<>();
 
     public static void clearPlayerList() {
         playerList.clear();
     }
-
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     public void onClientChatReceived(ClientChatReceivedEvent event) {
-        gametype = ScoreboardUtils.getBoardTitle().replaceAll("§[0123456789abcdefklmnor]", "");
-        List<String> sidebarScores = ScoreboardUtils.getSidebarLines();
-        for (String sidebarScore : sidebarScores) {
-            if (sidebarScore.matches("Players: .+/(12|24).+")) {
-                for (String sidebarScore2 : sidebarScores) {
-                    if (sidebarScore2.contains("§cInsane")) {
-                        mode = "solo_insane";
-                    } else if (sidebarScore2.contains("§aNormal")) {
-                        mode = "solo_normal";
-                    }
-                }
-            } else if (sidebarScore.matches("Players: .+/4.+")) {
-                mode = "ranked_normal";
-            }
-        }
+
+        final JsonObject[] jsonObject = new JsonObject[1];
         String msg = event.message.getUnformattedText();
-        if (msg.startsWith("Your new API key is")) {
+        if (msg.startsWith("{\"server\":")) {
+            if (!event.isCanceled()) {
+                event.setCanceled(true);
+            }
+            new Thread(() -> {
+                jsonObject[0] = JsonUtils.parseJson(msg).getAsJsonObject();
+                if (jsonObject[0].get("mode") != null && jsonObject[0].get("map") != null) {
+                    mode = jsonObject[0].get("mode").getAsString();
+                    gametype = jsonObject[0].get("gametype").getAsString();
+                    try {
+                        Collection<NetworkPlayerInfo> players = Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
+                        ArrayList<NetworkPlayerInfo> copy;
+                        synchronized (players) {
+                            copy = new ArrayList<>(players);
+                        }
+                        if (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS")) {
+                            for (NetworkPlayerInfo playerInfo : copy) {
+                                if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
+                                    ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
+                                } else {
+                                    if (!playerList.contains(playerInfo.getGameProfile().getId().toString())) {
+                                        StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+                                        playerList.add(playerInfo.getGameProfile().getId().toString());
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+        } else if (msg.startsWith("Your new API key is")) {
             try {
                 ConfigData.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
             } catch (IOException e) {
@@ -57,12 +76,9 @@ public class ChatReceivedEvent {
                     try {
                         String username = event.message.getUnformattedText().substring(0, event.message.getUnformattedText().indexOf(" has quit"));
                         String uuid = MojangApi.usernameToUuid(username);
-                        if (uuid != null) {
-                            if (!playerList.contains(uuid)) {
-                                playerList.add(uuid);
-                                StatDisplayUtils.stat(gametype, mode, uuid, username, false);
-
-                            }
+                        if (uuid != null && !playerList.contains(uuid)) {
+                            StatDisplayUtils.stat(gametype, mode, uuid, username, false);
+                            playerList.add(uuid);
                         } else {
                             ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
                         }
@@ -80,9 +96,8 @@ public class ChatReceivedEvent {
                         String uuid = MojangApi.usernameToUuid(username);
                         if (uuid != null) {
                             if (!playerList.contains(uuid)) {
-                                playerList.add(uuid);
                                 StatDisplayUtils.stat(gametype, mode, uuid, username, true);
-
+                                playerList.add(uuid);
                             }
                         } else {
                             ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
