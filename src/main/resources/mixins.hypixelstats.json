@@ -2,9 +2,12 @@
   "required": true,
   "package": "com.newwares.hypixelstats.mixins",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "notes.refmap.json",
+  "refmap": "hypixelstats.refmap.json",
   "mixins": [
 
   ],
-  "minVersion": "0.6"
+  "minVersion": "0.6",
+  "client": [
+    "PlayerInfoMapGrabber"
+  ]
 }

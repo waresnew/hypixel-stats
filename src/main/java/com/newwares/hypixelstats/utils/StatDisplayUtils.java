@@ -5,64 +5,63 @@ import com.newwares.hypixelstats.api.modes.Player;
 import com.newwares.hypixelstats.config.ConfigData;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class StatDisplayUtils {
-    public static void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException, InterruptedException {
+    public static void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException {
 
-            switch (gametype) {
-                case "BEDWARS": {
-                    if (ConfigData.getInstance().isEnabledBedwars()) {
-                        StatDisplayUtils.printStats(new HypixelApi("BEDWARS", uuid.replace("-", ""), username).setStats(), join);
-                    }
-                    break;
+        switch (gametype) {
+            case "BEDWARS": {
+                if (ConfigData.getInstance().isEnabledBedwars()) {
+                    StatDisplayUtils.printStats(new HypixelApi("BEDWARS", uuid.replace("-", ""), username).setStats(), join);
                 }
+                break;
+            }
 
-                case "SPEED_UHC": {
-                    if (ConfigData.getInstance().isEnabledSpeedUhc()) {
-                        StatDisplayUtils.printStats(new HypixelApi("SPEED_UHC", uuid.replace("-", ""), username).setStats(), join);
-                    }
-                    break;
+            case "SPEED_UHC": {
+                if (ConfigData.getInstance().isEnabledSpeedUhc()) {
+                    StatDisplayUtils.printStats(new HypixelApi("SPEED_UHC", uuid.replace("-", ""), username).setStats(), join);
                 }
+                break;
+            }
 
-                case "SKYWARS": {
-                    switch (mode) {
-                        case "ranked_normal": {
-                            if (ConfigData.getInstance().isEnabledRankedSkywars()) {
-                                StatDisplayUtils.printStats(new HypixelApi("RANKED_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                            }
-                            break;
+            case "SKYWARS": {
+                switch (mode) {
+                    case "ranked_normal": {
+                        if (ConfigData.getInstance().isEnabledRankedSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("RANKED_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
                         }
-                        case "teams_normal":
-                        case "solo_normal": {
-                            if (ConfigData.getInstance().isEnabledNormalSkywars()) {
-                                StatDisplayUtils.printStats(new HypixelApi("NORMAL_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                            }
-                            break;
-                        }
-                        case "teams_insane":
-                        case "solo_insane": {
-                            if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
-                                StatDisplayUtils.printStats(new HypixelApi("INSANE_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
-                            }
-                            break;
-                        }
+                        break;
                     }
-                    break;
+                    case "teams_normal":
+                    case "solo_normal": {
+                        if (ConfigData.getInstance().isEnabledNormalSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("NORMAL_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
+                        }
+                        break;
+                    }
+                    case "teams_insane":
+                    case "solo_insane": {
+                        if (ConfigData.getInstance().isEnabledInsaneSkywars()) {
+                            StatDisplayUtils.printStats(new HypixelApi("INSANE_SKYWARS", uuid.replace("-", ""), username).setStats(), join);
+                        }
+                        break;
+                    }
                 }
+                break;
+            }
         }
     }
 
     public static void printStats(Player player, boolean join) {
         if (!player.isBot()) {
             if (player.isNicked()) {
-                ChatUtils.print(ChatColour.RED.getColourCode() + "[NICKED]" + player.getUsername());
+                ChatUtils.print(ChatColour.RED + "[NICKED]" + player.getUsername());
             } else {
                 StringBuilder statString = new StringBuilder();
                 if (join) {
-                    statString.append(ChatColour.BOLD.getColourCode()).append(ChatColour.GREEN.getColourCode()).append("+").append(ChatColour.RESET.getColourCode()).append(" ").append(player.translate());
+                    statString.append(ChatColour.BOLD).append(ChatColour.GREEN).append("+").append(ChatColour.RESET).append(" ").append(player.translate());
                 } else {
-                    statString.append(ChatColour.BOLD.getColourCode()).append(ChatColour.RED.getColourCode()).append("-").append(ChatColour.RESET.getColourCode()).append(" ").append(player.translate());
+                    statString.append(ChatColour.BOLD).append(ChatColour.RED).append("-").append(ChatColour.RESET).append(" ").append(player.getRankColour()).append(player.getUsername()).append(ChatColour.RESET);
                 }
                 ChatUtils.print(statString.toString());
             }

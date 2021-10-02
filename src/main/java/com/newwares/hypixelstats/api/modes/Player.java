@@ -21,10 +21,6 @@ public class Player {
         this.username = username;
     }
 
-    public String translate() {
-        return null;
-    }
-
     @Override
     public int hashCode() {
         return this.uuid.hashCode();
@@ -135,7 +131,7 @@ public class Player {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour.getColourCode() + ws;
+        return colour + String.valueOf(ws);
     }
 
     public void setWs(int ws) {
@@ -164,7 +160,7 @@ public class Player {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour.getColourCode() + kdr;
+        return colour + String.valueOf(kdr);
     }
 
     public String getWlr() {
@@ -189,7 +185,7 @@ public class Player {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour.getColourCode() + wlr;
+        return colour + String.valueOf(wlr);
     }
 
     public String getUuid() {
@@ -216,8 +212,8 @@ public class Player {
         isBot = bot;
     }
 
-    public String genericTranslate() {
-        return "[" + this.getLevel() + ChatColour.RESET.getColourCode() + "] " + this.getRankColour().getColourCode() + this.getUsername() + ChatColour.RESET.getColourCode() + " WS: " + this.getWs() + ChatColour.RESET.getColourCode() + " WLR: " + this.getWlr() + ChatColour.RESET.getColourCode() + " KDR: " + this.getKdr() + ChatColour.RESET.getColourCode() + " ";
+    public String translate() {
+        return "[" + this.getLevel() + ChatColour.RESET + "] " + this.getRankColour() + this.getUsername() + ChatColour.RESET + " WS: " + this.getWs() + ChatColour.RESET + " WLR: " + this.getWlr() + ChatColour.RESET + " KDR: " + this.getKdr() + ChatColour.RESET + " ";
     }
 
     public String getLevel() {

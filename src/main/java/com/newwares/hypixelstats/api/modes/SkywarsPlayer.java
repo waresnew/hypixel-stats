@@ -4,9 +4,8 @@ import com.newwares.hypixelstats.utils.ChatColour;
 
 public abstract class SkywarsPlayer extends PlayerDecorator {
     private final Player player;
-    private String level = ChatColour.GREY.getColourCode() + "0☆";
+    private String level = ChatColour.GREY + "0☆";
     private String currentKit = "Default";
-    private String mostUsedKit = "Default";
 
     public SkywarsPlayer(Player player) {
         super(player.getUuid(), player.getUsername());
@@ -30,16 +29,8 @@ public abstract class SkywarsPlayer extends PlayerDecorator {
         this.currentKit = currentKit;
     }
 
-    public String getMostUsedKit() {
-        return mostUsedKit;
-    }
-
-    public void setMostUsedKit(String mostUsedKit) {
-        this.mostUsedKit = mostUsedKit;
-    }
-
     @Override
     public String translate() {
-        return genericTranslate() + ChatColour.RESET.getColourCode() + "AK: " + ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " MK: " + ChatColour.GREY.getColourCode() + this.getMostUsedKit() + ChatColour.RESET.getColourCode();
+        return super.translate() + ChatColour.RESET + "Kit: " + ChatColour.GREY + this.getCurrentKit() + ChatColour.RESET;
     }
 }

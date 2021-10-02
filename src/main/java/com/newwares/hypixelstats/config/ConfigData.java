@@ -30,6 +30,7 @@ public class ConfigData {
         return configData;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void init(File directory) throws IOException {
         if (!new File(directory.getPath() + "\\HypixelStats").exists()) {
             new File(directory.getPath() + "\\HypixelStats").mkdir();

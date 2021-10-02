@@ -6,23 +6,47 @@ import com.newwares.hypixelstats.utils.ChatUtils;
 import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class StatCommand extends CommandBase {
     @Override
     public String getCommandName() {
-        return "stat";
+        return "hypixelstats";
     }
 
     @Override
     public String getCommandUsage(ICommandSender iCommandSender) {
-        return "/stat <bw/nsw/isw/rsw/uhc> <username>";
+        return "/hypixelstats <bw/nsw/isw/rsw/uhc> <username>";
+    }
+
+    @Override
+    public List<String> getCommandAliases() {
+        return Collections.singletonList("hs");
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
         return true;
+    }
+
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        if (args.length == 1) {
+            ArrayList<String> list = new ArrayList<>();
+            list.add("bw");
+            list.add("nsw");
+            list.add("isw");
+            list.add("rsw");
+            list.add("uhc");
+            Collections.sort(list);
+            return getListOfStringsMatchingLastWord(args, list);
+        }
+        return null;
     }
 
     @Override
@@ -57,9 +81,9 @@ public class StatCommand extends CommandBase {
                         }
                     }
                 } else {
-                    ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+                    ChatUtils.print(ChatColour.RED + username + " is nicked!");
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();

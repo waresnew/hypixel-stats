@@ -25,13 +25,14 @@ public enum ChatColour {
     RESET('r');
 
     private final char colourCode;
-    private final char colourChar = '§';
 
     ChatColour(char colourCode) {
         this.colourCode = colourCode;
     }
 
-    public String getColourCode() {
-        return String.valueOf(this.colourChar) + this.colourCode;
+    @Override
+    public String toString() {
+        char colourChar = '§';
+        return String.valueOf(colourChar) + this.colourCode;
     }
 }

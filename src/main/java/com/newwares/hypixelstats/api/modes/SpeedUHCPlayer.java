@@ -37,7 +37,7 @@ public class SpeedUHCPlayer extends PlayerDecorator {
         } else {
             level = 10;
         }
-        return ChatColour.LIGHT_PURPLE.getColourCode() + level + "❋";
+        return ChatColour.LIGHT_PURPLE + String.valueOf(level) + "❋";
     }
 
     public String getCurrentKit() {
@@ -62,6 +62,6 @@ public class SpeedUHCPlayer extends PlayerDecorator {
 
     @Override
     public String translate() {
-        return genericTranslate() + ChatColour.RESET.getColourCode() + "AK: " + ChatColour.GREY.getColourCode() + this.getCurrentKit() + ChatColour.RESET.getColourCode() + " Mastery: " + ChatColour.GREY.getColourCode() + this.getCurrentMastery() + ChatColour.RESET.getColourCode();
+        return super.translate() + ChatColour.RESET + "Kit: " + ChatColour.GREY + this.getCurrentKit() + ChatColour.RESET + " Mastery: " + ChatColour.GREY + this.getCurrentMastery() + ChatColour.RESET;
     }
 }

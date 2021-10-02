@@ -26,7 +26,7 @@ public class HypixelApi {
     }
 
 
-    public Player setStats() throws IOException, InterruptedException {
+    public Player setStats() throws IOException {
         JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ConfigData.getInstance().getApiKey(), uuid))).getAsJsonObject();
         System.out.println("HypixelStats checking: " + uuid);
         Player testPlayer = PlayerFactory.switchModes(jsonObject.get("player").getAsJsonObject(), game, username, uuid);

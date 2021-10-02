@@ -1,15 +1,10 @@
 package com.newwares.hypixelstats.api.modes.factories;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.PlayerCache;
 import com.newwares.hypixelstats.api.modes.InsaneSkywarsPlayer;
 import com.newwares.hypixelstats.api.modes.Player;
 import com.newwares.hypixelstats.utils.StringUtils;
-
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class InsaneSkywarsPlayerFactory extends PlayerFactory {
     @Override
@@ -25,20 +20,25 @@ public class InsaneSkywarsPlayerFactory extends PlayerFactory {
                     setMainStats(playerJsonObject, skywarsObject, player);
                     if (skywarsObject.has("activeKit_TEAMS"))
                         player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_TEAMS").getAsString().substring(skywarsObject.get("activeKit_TEAMS").getAsString().lastIndexOf("_") + 1).replace("_", " ")));
-                    int highestTime = 0;
-                    String mainKit = "none";
-                    for (Map.Entry<String, JsonElement> element : skywarsObject.entrySet()) {
-                        Matcher insaneKitMatcher = Pattern.compile("time_played_kit_.+_team_.+").matcher(element.getKey());
-                        if (insaneKitMatcher.matches()) {
-                            if (highestTime < element.getValue().getAsInt()) {
-                                highestTime = element.getValue().getAsInt();
-                                mainKit = element.getKey().substring(element.getKey().lastIndexOf("_") + 1).replace("_", " ");
-                            }
-                        }
-                    }
-                    player.setMostUsedKit(StringUtils.toTitleCase(mainKit));
                     if (skywarsObject.has("levelFormatted"))
                         player.setLevel(skywarsObject.get("levelFormatted").getAsString());
+                    if (skywarsObject.has("deaths_solo_insane"))
+                        player.setDeaths(skywarsObject.get("deaths_solo_insane").getAsInt());
+                    if (skywarsObject.has("deaths_team_insane"))
+                        player.setDeaths(player.getDeaths() + skywarsObject.get("deaths_team_insane").getAsInt());
+                    if (skywarsObject.has("kills_solo_insane"))
+                        player.setKills(skywarsObject.get("kills_solo_insane").getAsInt());
+                    if (skywarsObject.has("kills_team_insane"))
+                        player.setKills(player.getKills() + skywarsObject.get("kills_team_insane").getAsInt());
+                    if (skywarsObject.has("wins_solo_insane"))
+                        player.setWins(skywarsObject.get("wins_solo_insane").getAsInt());
+                    if (skywarsObject.has("wins_team_insane"))
+                        player.setWins(player.getWins() + skywarsObject.get("wins_team_insane").getAsInt());
+                    if (skywarsObject.has("losses_solo_insane"))
+                        player.setLosses(skywarsObject.get("losses_solo_insane").getAsInt());
+                    if (skywarsObject.has("losses_team_insane"))
+                        player.setLosses(player.getLosses() + skywarsObject.get("losses_team_insane").getAsInt());
+                   
                 } else {
                     player = new InsaneSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
                     PlayerCache.getInstance().updateCache(uuid, player);

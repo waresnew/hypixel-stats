@@ -1,15 +1,10 @@
 package com.newwares.hypixelstats.api.modes.factories;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.api.PlayerCache;
 import com.newwares.hypixelstats.api.modes.NormalSkywarsPlayer;
 import com.newwares.hypixelstats.api.modes.Player;
 import com.newwares.hypixelstats.utils.StringUtils;
-
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class NormalSkywarsPlayerFactory extends PlayerFactory {
     @Override
@@ -25,21 +20,24 @@ public class NormalSkywarsPlayerFactory extends PlayerFactory {
                     setMainStats(playerJsonObject, skywarsObject, player);
                     if (skywarsObject.has("activeKit_SOLO"))
                         player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_SOLO").getAsString().substring(skywarsObject.get("activeKit_SOLO").getAsString().lastIndexOf("_") + 1).replace("_", " ")));
-                    int highestTime = 0;
-                    String mainKit = "none";
-
-                    for (Map.Entry<String, JsonElement> element : skywarsObject.entrySet()) {
-                        Matcher normalKitMatcher = Pattern.compile("time_played_kit_.+_solo_.+").matcher(element.getKey());
-                        if (normalKitMatcher.matches()) {
-                            if (highestTime < element.getValue().getAsInt()) {
-                                highestTime = element.getValue().getAsInt();
-                                mainKit = element.getKey().substring(element.getKey().lastIndexOf("_") + 1).replace("_", " ");
-                            }
-                        }
-                    }
-                    player.setMostUsedKit(StringUtils.toTitleCase(mainKit));
                     if (skywarsObject.has("levelFormatted"))
                         player.setLevel(skywarsObject.get("levelFormatted").getAsString());
+                    if (skywarsObject.has("deaths_solo_normal"))
+                        player.setDeaths(skywarsObject.get("deaths_solo_normal").getAsInt());
+                    if (skywarsObject.has("deaths_team_normal"))
+                        player.setDeaths(player.getDeaths() + skywarsObject.get("deaths_team_normal").getAsInt());
+                    if (skywarsObject.has("kills_solo_normal"))
+                        player.setKills(skywarsObject.get("kills_solo_normal").getAsInt());
+                    if (skywarsObject.has("kills_team_normal"))
+                        player.setKills(player.getKills() + skywarsObject.get("kills_team_normal").getAsInt());
+                    if (skywarsObject.has("wins_solo_normal"))
+                        player.setWins(skywarsObject.get("wins_solo_normal").getAsInt());
+                    if (skywarsObject.has("wins_team_normal"))
+                        player.setWins(player.getWins() + skywarsObject.get("wins_team_normal").getAsInt());
+                    if (skywarsObject.has("losses_solo_normal"))
+                        player.setLosses(skywarsObject.get("losses_solo_normal").getAsInt());
+                    if (skywarsObject.has("losses_team_normal"))
+                        player.setLosses(player.getLosses() + skywarsObject.get("losses_team_normal").getAsInt());
                 } else {
                     player = new NormalSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
                     PlayerCache.getInstance().updateCache(uuid, player);

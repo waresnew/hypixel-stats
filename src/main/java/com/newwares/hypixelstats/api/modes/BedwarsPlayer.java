@@ -18,7 +18,7 @@ public class BedwarsPlayer extends PlayerDecorator {
 
     @Override
     public String translate() {
-        return genericTranslate() + "FKDR: " + this.getFkdr() + ChatColour.RESET.getColourCode() + " BBLR: " + this.getBblr() + ChatColour.RESET.getColourCode();
+        return super.translate() + "FKDR: " + this.getFkdr() + ChatColour.RESET + " BBLR: " + this.getBblr() + ChatColour.RESET;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BedwarsPlayer extends PlayerDecorator {
         } else {
             colour = ChatColour.RED;
         }
-        return colour.getColourCode() + level + "✫";
+        return colour + String.valueOf(level) + "✫";
     }
 
     public void setLevel(int level) {
@@ -76,7 +76,7 @@ public class BedwarsPlayer extends PlayerDecorator {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour.getColourCode() + bblr;
+        return colour + String.valueOf(bblr);
     }
 
     public int getFinalKills() {
@@ -135,6 +135,6 @@ public class BedwarsPlayer extends PlayerDecorator {
         } else {
             colour = ChatColour.DARK_PURPLE;
         }
-        return colour.getColourCode() + fkdr;
+        return colour + String.valueOf(fkdr);
     }
 }

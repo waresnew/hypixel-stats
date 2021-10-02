@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class JsonUtils {
 
-    public static JsonElement parseJson(URL url) throws InterruptedException, IOException {
+    public static JsonElement parseJson(URL url) throws IOException {
         JsonElement jsonElement;
         JsonParser parser = new JsonParser();
         InputStream inputStream = url.openStream();

@@ -45,7 +45,7 @@ public abstract class PlayerFactory {
 
     public static boolean isValidPlayer(JsonObject jsonObject, String game, String uuid, String username) throws IllegalArgumentException {
         if (Integer.parseInt(uuid.substring(12, 13)) == 1) {
-            ChatUtils.print(ChatColour.RED.getColourCode() + username + " is nicked!");
+            ChatUtils.print(ChatColour.RED + username + " is nicked!");
             return false;
         } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
             return false;
@@ -56,7 +56,7 @@ public abstract class PlayerFactory {
             return false;
         }
         if (jsonObject.get("success").getAsString().equals("false") && jsonObject.get("cause").getAsString().replace("\"", "").equals("Invalid API key")) {
-            throw new IllegalArgumentException(ChatColour.RED.getColourCode() + "Invalid API key. Please run /api new to set it.");
+            throw new IllegalArgumentException(ChatColour.RED + "Invalid API key. Please run /api new to set it.");
         }
         return true;
     }

@@ -58,7 +58,7 @@ minecraft {
     clientJvmArgs += "-Dmixin.debug.verbose=true -Dmixin.debug.export=true -Dfml.coreMods.load=com.newwares.hypixelstats.FMLLoadingPlugin"
     mappings = "stable_22"
     coreMod = 'com.newwares.hypixelstats.FMLLoadingPlugin'
-    clientRunArgs += "--tweakClass org.spongepowered.asm.launch.MixinTweaker --mixin helper.mixins.json"
+    clientRunArgs += "--tweakClass org.spongepowered.asm.launch.MixinTweaker --mixin hypixelstats.mixins.json"
 }
 
 dependencies {
@@ -100,7 +100,7 @@ jar {
                 "TweakOrder"                 : "0",
                 "TweakClass"                 : "org.spongepowered.asm.launch.MixinTweaker",
                 "ModSide"                    : "CLIENT",
-                "MixinConfigs"               : "hypixelstats.mixins.json"
+                "MixinConfigs"               : "mixins.hypixelstats.json"
         ])
     }
 }
