@@ -1,11 +1,12 @@
 package com.newwares.hypixelstats.api;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerCache {
     private static PlayerCache playerCache;
 
-    private final ConcurrentHashMap<String, Object> nameCache = new ConcurrentHashMap<>();
+    private final HashMap<String, Object> nameCache = new HashMap<>();
 
 
     private PlayerCache() {

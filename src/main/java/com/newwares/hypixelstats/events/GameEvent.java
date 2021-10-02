@@ -47,10 +47,7 @@ public class GameEvent {
                         }
                     }
                     Collection<NetworkPlayerInfo> players = Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap();
-                    ArrayList<NetworkPlayerInfo> copy;
-                    synchronized (players) {
-                        copy = new ArrayList<>(players);
-                    }
+                    ArrayList<NetworkPlayerInfo> copy = new ArrayList<>(players);
                     for (NetworkPlayerInfo playerInfo : copy) {
                         if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
                             ChatUtils.print(ChatColour.RED.getColourCode() + playerInfo.getGameProfile().getName() + " is nicked!");
