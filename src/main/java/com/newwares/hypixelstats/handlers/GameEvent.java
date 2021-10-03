@@ -67,7 +67,7 @@ public class GameEvent {
         }
     }
 
-    @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGH)
+    @SubscribeEvent(receiveCanceled = true, priority = EventPriority.LOW)
     public void onClientChatReceived(ClientChatReceivedEvent event) {
 
         final JsonObject[] jsonObject = new JsonObject[1];
