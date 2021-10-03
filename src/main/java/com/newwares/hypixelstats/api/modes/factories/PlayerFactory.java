@@ -36,11 +36,6 @@ public abstract class PlayerFactory {
         } else if (playerObject.has("newPackageRank")) {
             player.setRank(playerObject.get("newPackageRank").getAsString());
         }
-        if (gameObject.has("win_streak")) player.setWs(gameObject.get("win_streak").getAsInt());
-        if (gameObject.has("wins")) player.setWins(gameObject.get("wins").getAsInt());
-        if (gameObject.has("losses")) player.setLosses(gameObject.get("losses").getAsInt());
-        if (gameObject.has("kills")) player.setKills(gameObject.get("kills").getAsInt());
-        if (gameObject.has("deaths")) player.setDeaths(gameObject.get("deaths").getAsInt());
     }
 
     public static boolean isValidPlayer(JsonObject jsonObject, String game, String uuid, String username) throws IllegalArgumentException {

@@ -23,6 +23,11 @@ public class SpeedUHCPlayerFactory extends PlayerFactory {
                         player.setCurrentKit(StringUtils.toTitleCase(speedUHCObject.get("activeKit_NORMAL").getAsString().replace("kit_basic_normal_", "")));
                     if (speedUHCObject.has("score"))
                         player.setScore(speedUHCObject.get("score").getAsInt());
+                    if (speedUHCObject.has("win_streak")) player.setWs(speedUHCObject.get("win_streak").getAsInt());
+                    if (speedUHCObject.has("wins")) player.setWins(speedUHCObject.get("wins").getAsInt());
+                    if (speedUHCObject.has("losses")) player.setLosses(speedUHCObject.get("losses").getAsInt());
+                    if (speedUHCObject.has("kills")) player.setKills(speedUHCObject.get("kills").getAsInt());
+                    if (speedUHCObject.has("deaths")) player.setDeaths(speedUHCObject.get("deaths").getAsInt());
                 } else {
                     player = new SpeedUHCPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
                     PlayerCache.getInstance().updateCache(uuid, player);
