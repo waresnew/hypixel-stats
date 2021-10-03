@@ -18,3 +18,5 @@ go check out [DuelSniffer](https://github.com/exejar/DuelSniffer) if you want a 
 
 ##### /hypixelstats <nsw/rsw/isw/bw/uhc> <username>
 manually prints out the stats for a player depending on the gamemode
+  
+  alias = `hs`
