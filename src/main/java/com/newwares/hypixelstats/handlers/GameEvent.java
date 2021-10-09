@@ -37,6 +37,7 @@ public class GameEvent {
         if (event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().theWorld != null) {
             if (world != Minecraft.getMinecraft().theWorld) {
                 world = Minecraft.getMinecraft().theWorld;
+                playerInfoMap.clear();
                 receivedLocraw = false;
             }
 
