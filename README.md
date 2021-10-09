@@ -2,6 +2,9 @@
 
 Your average hypixel queue dodger mod
 
+![image](https://user-images.githubusercontent.com/45801973/136672533-345a3f9b-b328-4e9d-90a1-dc5430892523.png)
+
+
 run /api new to set your api key and join a game
 
 this mod prints stats to the chat
