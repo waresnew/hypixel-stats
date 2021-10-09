@@ -11,6 +11,8 @@ this mod prints stats to the chat
 
 supported modes: speeduhc, ranked sw, insane sw, normal sw, bedwars
 
+known issue: it will print out the stats of the bots that briefly appear at the start of a game
+
 caches api results to avoid rate limits
 
 config is stored in the `HypixelStats` folder in the minecraft directory
