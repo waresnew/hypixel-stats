@@ -7,7 +7,6 @@ import com.newwares.hypixelstats.utils.ChatUtils;
 import com.newwares.hypixelstats.utils.JsonUtils;
 import com.newwares.hypixelstats.utils.StatDisplayUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -17,12 +16,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 public class GameEvent {
     private static final ArrayList<String> playerList = new ArrayList<>();
-    public static HashMap<UUID, NetworkPlayerInfo> playerInfoMap = new HashMap<>();
+    public static HashMap<String, UUID> playerInfoMap = new HashMap<>();
     private String mode;
     private String gametype;
     private boolean receivedLocraw = false;
@@ -45,16 +44,15 @@ public class GameEvent {
                 new Thread(() -> {
                     try {
                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
-                            HashSet<NetworkPlayerInfo> values = new HashSet<>(playerInfoMap.values());
-                            for (NetworkPlayerInfo playerInfo : values) {
-                                if (!playerList.contains(playerInfo.getGameProfile().getId().toString())) {
-                                    playerList.add(playerInfo.getGameProfile().getId().toString());
-                                    if (Integer.parseInt(playerInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
-                                        ChatUtils.print(playerInfo.getGameProfile().getId().toString().replace("-", ""));
-                                        ChatUtils.print(ChatColour.RED + playerInfo.getGameProfile().getName() + " is nicked!");
+                            HashMap<String, UUID> values = new HashMap<>(playerInfoMap);
+                            for (Map.Entry<String, UUID> playerInfo : values.entrySet()) {
+                                if (!playerList.contains(playerInfo.getValue().toString())) {
+                                    playerList.add(playerInfo.getValue().toString());
+                                    if (Integer.parseInt(playerInfo.getValue().toString().replace("-", "").substring(12, 13)) == 1) {
+                                        ChatUtils.print(ChatColour.RED + playerInfo.getKey() + " is nicked!");
                                         continue;
                                     }
-                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getGameProfile().getId().toString(), playerInfo.getGameProfile().getName(), true);
+                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getValue().toString(), playerInfo.getKey(), true);
 
                                 }
                             }
@@ -73,6 +71,7 @@ public class GameEvent {
         final JsonObject[] jsonObject = new JsonObject[1];
         String msg = event.message.getUnformattedText();
         if (msg.startsWith("{\"server\":")) {
+            System.out.println(msg);
             if (!event.isCanceled()) {
                 event.setCanceled(true);
             }

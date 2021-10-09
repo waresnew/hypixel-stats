@@ -17,12 +17,12 @@ public abstract class PlayerInfoMapGrabber {
     @SuppressWarnings("rawtypes")
     @Inject(method = "handlePlayerListItem(Lnet/minecraft/network/play/server/S38PacketPlayerListItem;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0, remap = false), locals = LocalCapture.CAPTURE_FAILHARD)
     private void getPlayerInfo(S38PacketPlayerListItem p_handlePlayerListItem_1_, CallbackInfo ci, Iterator var2, S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata, NetworkPlayerInfo networkplayerinfo) {
-        GameEvent.playerInfoMap.put(networkplayerinfo.getGameProfile().getId(), networkplayerinfo);
+        GameEvent.playerInfoMap.put(networkplayerinfo.getGameProfile().getName(), networkplayerinfo.getGameProfile().getId());
     }
 
     @SuppressWarnings("rawtypes")
     @Inject(method = "handlePlayerListItem(Lnet/minecraft/network/play/server/S38PacketPlayerListItem;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0, remap = false), locals = LocalCapture.CAPTURE_FAILHARD)
     private void removePlayerInfo(S38PacketPlayerListItem p_handlePlayerListItem_1_, CallbackInfo ci, Iterator var2, S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata) {
-        GameEvent.playerInfoMap.remove(s38packetplayerlistitem$addplayerdata.getProfile().getId());
+        GameEvent.playerInfoMap.remove(s38packetplayerlistitem$addplayerdata.getProfile().getName());
     }
 }

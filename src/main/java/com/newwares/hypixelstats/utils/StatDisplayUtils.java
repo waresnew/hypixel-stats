@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class StatDisplayUtils {
     public static void stat(String gametype, String mode, String uuid, String username, boolean join) throws IOException {
-
         switch (gametype) {
             case "BEDWARS": {
                 if (ConfigData.getInstance().isEnabledBedwars()) {
@@ -53,6 +52,9 @@ public class StatDisplayUtils {
     }
 
     public static void printStats(Player player, boolean join) {
+        if (player == null) {
+            return;
+        }
         if (!player.isBot()) {
             if (player.isNicked()) {
                 ChatUtils.print(ChatColour.RED + "[NICKED]" + player.getUsername());

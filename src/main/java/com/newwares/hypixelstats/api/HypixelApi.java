@@ -28,8 +28,14 @@ public class HypixelApi {
 
     public Player setStats() throws IOException {
         JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ConfigData.getInstance().getApiKey(), uuid))).getAsJsonObject();
+        JsonObject player;
+        try {
+            player = jsonObject.get("player").getAsJsonObject();
+        } catch (IllegalStateException ignored) {
+            return null;
+        }
         System.out.println("HypixelStats checking: " + uuid);
-        Player testPlayer = PlayerFactory.switchModes(jsonObject.get("player").getAsJsonObject(), game, username, uuid);
+        Player testPlayer = PlayerFactory.switchModes(player, game, username, uuid);
 
         if (testPlayer instanceof BedwarsPlayer) {
             return new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
