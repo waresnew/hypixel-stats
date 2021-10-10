@@ -4,7 +4,7 @@
 
 Your average hypixel queue dodger mod
 
-![image](https://user-images.githubusercontent.com/45801973/136672533-345a3f9b-b328-4e9d-90a1-dc5430892523.png)
+![image](https://user-images.githubusercontent.com/45801973/136708050-2afb3d42-d7af-4694-ac8c-010686478465.png)
 
 
 run /api new to set your api key and join a game
