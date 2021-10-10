@@ -49,14 +49,16 @@ public class GameEvent {
                                 playerList.add(gameProfile.getId().toString().replace("-", ""));
                                 try {
                                     String[] result = DenickerInvoker.denick(gameProfile);
-                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
-                                    if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
-                                        try {
-                                            StatDisplayUtils.stat(gametype, mode, result[1], result[0], true);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+                                    if (result != null) {
+                                        ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
+                                        if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
+                                            try {
+                                                StatDisplayUtils.stat(gametype, mode, result[1], result[0], true);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
 
+                                        }
                                     }
                                 } catch (IllegalStateException ignored) {
                                     ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
