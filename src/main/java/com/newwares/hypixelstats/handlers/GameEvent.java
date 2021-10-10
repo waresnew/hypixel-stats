@@ -59,6 +59,8 @@ public class GameEvent {
                                             }
 
                                         }
+                                    } else {
+                                        ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
                                     }
                                 } catch (IllegalStateException ignored) {
                                     ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
