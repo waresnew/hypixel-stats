@@ -20,8 +20,7 @@ config is stored in the `HypixelStats` folder in the minecraft directory
 go check out [DuelSniffer](https://github.com/exejar/DuelSniffer) if you want a duels queue dodger
 
 ### Commands
-
-##### /hypixelstats <nsw/rsw/isw/bw/uhc> <username>
+- /hypixelstats <nsw/rsw/isw/bw/uhc> <username>
 manually prints out the stats for a player depending on the gamemode
   
   alias = `hs`
