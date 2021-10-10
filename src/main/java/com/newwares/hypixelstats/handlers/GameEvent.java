@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.handlers;
 
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
+import com.newwares.hypixelstats.api.MojangApi;
 import com.newwares.hypixelstats.config.ConfigData;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
 import com.newwares.hypixelstats.utils.ChatColour;
@@ -53,8 +54,8 @@ public class GameEvent {
                             if (Integer.parseInt(gameProfile.getId().toString().replace("-", "").substring(12, 13)) == 1) {
                                 playerList.add(gameProfile.getId().toString().replace("-", ""));
                                 try {
-                                    String[] result = DenickerInvoker.denick(gameProfile);
-                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
+                                    String result = DenickerInvoker.denick(gameProfile);
+                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + MojangApi.uuidToUsername(result) + ")");
                                 } catch (IllegalStateException ignored) {
                                     ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
                                 }
