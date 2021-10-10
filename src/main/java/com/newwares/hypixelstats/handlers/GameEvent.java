@@ -1,7 +1,9 @@
 package com.newwares.hypixelstats.handlers;
 
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
 import com.newwares.hypixelstats.utils.JsonUtils;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class GameEvent {
     private static final ArrayList<String> playerList = new ArrayList<>();
     public static HashMap<String, UUID> playerInfoMap = new HashMap<>();
+    public static ArrayList<GameProfile> playerinfos = new ArrayList<>();
     private String mode;
     private String gametype;
     private boolean receivedLocraw = false;
@@ -38,28 +41,39 @@ public class GameEvent {
             if (world != Minecraft.getMinecraft().theWorld) {
                 world = Minecraft.getMinecraft().theWorld;
                 playerInfoMap.clear();
+                playerinfos.clear();
                 receivedLocraw = false;
             }
 
             if (receivedLocraw) {
                 new Thread(() -> {
-                    try {
-                        if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
-                            HashMap<String, UUID> values = new HashMap<>(playerInfoMap);
-                            for (Map.Entry<String, UUID> playerInfo : values.entrySet()) {
-                                if (!playerList.contains(playerInfo.getValue().toString())) {
-                                    playerList.add(playerInfo.getValue().toString());
-                                    if (Integer.parseInt(playerInfo.getValue().toString().replace("-", "").substring(12, 13)) == 1) {
-                                        ChatUtils.print(ChatColour.RED + playerInfo.getKey() + " is nicked!");
-                                        continue;
-                                    }
-                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getValue().toString(), playerInfo.getKey(), true);
-
+                    ArrayList<GameProfile> copy = new ArrayList<>(playerinfos);
+                    for (GameProfile gameProfile : copy) {
+                        if (!playerList.contains(gameProfile.getId().toString().replace("-", ""))) {
+                            if (Integer.parseInt(gameProfile.getId().toString().replace("-", "").substring(12, 13)) == 1) {
+                                playerList.add(gameProfile.getId().toString().replace("-", ""));
+                                try {
+                                    String[] result = DenickerInvoker.denick(gameProfile);
+                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
+                                } catch (IllegalStateException ignored) {
+                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
                                 }
                             }
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    }
+                    HashMap<String, UUID> values = new HashMap<>(playerInfoMap);
+                    for (Map.Entry<String, UUID> playerInfo : values.entrySet()) {
+                        if (!playerList.contains(playerInfo.getValue().toString().replace("-", ""))) {
+                            playerList.add(playerInfo.getValue().toString().replace("-", ""));
+                            if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
+                                try {
+                                    StatDisplayUtils.stat(gametype, mode, playerInfo.getValue().toString(), playerInfo.getKey(), true);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
                     }
                 }).start();
             }

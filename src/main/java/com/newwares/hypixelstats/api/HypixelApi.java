@@ -37,15 +37,36 @@ public class HypixelApi {
         System.out.println("HypixelStats checking: " + uuid);
         Player testPlayer = PlayerFactory.switchModes(player, game, username, uuid);
 
+
         if (testPlayer instanceof BedwarsPlayer) {
+            new InsaneSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new NormalSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new RankedSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new SpeedUHCPlayerFactory().createPlayer(jsonObject, uuid, username);
             return new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
         } else if (testPlayer instanceof InsaneSkywarsPlayer) {
+            new NormalSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new RankedSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new SpeedUHCPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
             return new InsaneSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
         } else if (testPlayer instanceof NormalSkywarsPlayer) {
+            new InsaneSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new RankedSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new SpeedUHCPlayerFactory().createPlayer(jsonObject, uuid, username);
             return new NormalSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
         } else if (testPlayer instanceof RankedSkywarsPlayer) {
+            new InsaneSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new NormalSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new SpeedUHCPlayerFactory().createPlayer(jsonObject, uuid, username);
             return new RankedSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
         } else if (testPlayer instanceof SpeedUHCPlayer) {
+            new InsaneSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new NormalSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new RankedSkywarsPlayerFactory().createPlayer(jsonObject, uuid, username);
+            new BedwarsPlayerFactory().createPlayer(jsonObject, uuid, username);
             return new SpeedUHCPlayerFactory().createPlayer(jsonObject, uuid, username);
         } else {
             return null;
