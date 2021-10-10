@@ -38,7 +38,7 @@ public class InsaneSkywarsPlayerFactory extends PlayerFactory {
                         player.setLosses(skywarsObject.get("losses_solo_insane").getAsInt());
                     if (skywarsObject.has("losses_team_insane"))
                         player.setLosses(player.getLosses() + skywarsObject.get("losses_team_insane").getAsInt());
-                   
+
                 } else {
                     player = new InsaneSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
                     PlayerCache.getInstance().updateCache(uuid, player);
