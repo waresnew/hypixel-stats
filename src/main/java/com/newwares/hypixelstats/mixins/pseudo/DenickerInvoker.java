@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface DenickerInvoker {
 
     @Invoker(value = "denick", remap = false)
-    static String denick(GameProfile gameProfile) {
+    static String[] denick(GameProfile gameProfile) {
         throw new IllegalStateException("Mod not loaded");
     }
 }
