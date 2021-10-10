@@ -1,5 +1,7 @@
 # hypixel-stats
 
+`denicker is only available if you have the "helper mod" (i'm currently not releasing it)`
+
 Your average hypixel queue dodger mod
 
 ![image](https://user-images.githubusercontent.com/45801973/136672533-345a3f9b-b328-4e9d-90a1-dc5430892523.png)
