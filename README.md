@@ -6,6 +6,9 @@ Your average hypixel queue dodger mod
 
 ![image](https://user-images.githubusercontent.com/45801973/136708050-2afb3d42-d7af-4694-ac8c-010686478465.png)
 
+![image](https://user-images.githubusercontent.com/45801973/136709135-eb59ede0-d0ea-45c5-a3a4-5beff0197009.png)
+
+
 ![image](https://user-images.githubusercontent.com/45801973/136708123-560f187e-5eb7-47b6-b128-98601c929330.png)
 
 
