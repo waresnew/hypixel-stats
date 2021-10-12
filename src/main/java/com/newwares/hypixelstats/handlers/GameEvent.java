@@ -40,7 +40,7 @@ public class GameEvent {
                 receivedLocraw = false;
             }
 
-            if (receivedLocraw) {
+            if (receivedLocraw && Minecraft.getMinecraft().playerController.getCurrentGameType().getName().equals("adventure")) {
                 new Thread(() -> {
                     ArrayList<GameProfile> copy = new ArrayList<>(playerinfos);
                     for (GameProfile gameProfile : copy) {
