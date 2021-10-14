@@ -134,7 +134,7 @@ public class GameEvent {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set api key");
+            ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set players key");
         }
     }
 

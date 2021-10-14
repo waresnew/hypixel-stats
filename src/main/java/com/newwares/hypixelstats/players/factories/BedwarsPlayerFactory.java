@@ -1,8 +1,8 @@
-package com.newwares.hypixelstats.api.modes.factories;
+package com.newwares.hypixelstats.players.factories;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.modes.BedwarsPlayer;
-import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.players.BedwarsPlayer;
+import com.newwares.hypixelstats.players.Player;
 import com.newwares.hypixelstats.config.PlayerCache;
 
 import java.io.IOException;

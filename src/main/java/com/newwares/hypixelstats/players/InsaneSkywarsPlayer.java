@@ -1,4 +1,4 @@
-package com.newwares.hypixelstats.api.modes;
+package com.newwares.hypixelstats.players;
 
 public class InsaneSkywarsPlayer extends SkywarsPlayer {
     public InsaneSkywarsPlayer(String uuid, String username) {

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Pseudo
-@Mixin(targets = "com.newwares.helper.api.Denicker")
+@Mixin(targets = "com.newwares.helper.players.Denicker")
 public interface DenickerInvoker {
 
     @Invoker(value = "denick", remap = false)

@@ -1,8 +1,8 @@
-package com.newwares.hypixelstats.api.modes.factories;
+package com.newwares.hypixelstats.players.factories;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.modes.GameMode;
-import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.players.GameMode;
+import com.newwares.hypixelstats.players.Player;
 import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
@@ -36,7 +36,7 @@ public abstract class PlayerFactory {
             return false;
         }
         if (jsonObject.get("success").getAsString().equals("false") && jsonObject.get("cause").getAsString().replace("\"", "").equals("Invalid API key")) {
-            throw new IllegalArgumentException(ChatColour.RED + "Invalid API key. Please run /api new to set it.");
+            throw new IllegalArgumentException(ChatColour.RED + "Invalid API key. Please run /players new to set it.");
         }
         return true;
     }

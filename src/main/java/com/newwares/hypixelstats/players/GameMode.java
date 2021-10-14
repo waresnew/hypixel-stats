@@ -1,6 +1,6 @@
-package com.newwares.hypixelstats.api.modes;
+package com.newwares.hypixelstats.players;
 
-import com.newwares.hypixelstats.api.modes.factories.*;
+import com.newwares.hypixelstats.players.factories.*;
 
 public enum GameMode {
     BEDWARS(BedwarsPlayer.class, BedwarsPlayerFactory.class),

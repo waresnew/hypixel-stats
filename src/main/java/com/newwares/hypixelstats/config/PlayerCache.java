@@ -1,8 +1,8 @@
 package com.newwares.hypixelstats.config;
 
 import com.google.gson.reflect.TypeToken;
-import com.newwares.hypixelstats.api.modes.GameMode;
-import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.players.GameMode;
+import com.newwares.hypixelstats.players.Player;
 import com.newwares.hypixelstats.utils.JsonUtils;
 
 import java.io.*;

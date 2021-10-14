@@ -1,7 +1,7 @@
 package com.newwares.hypixelstats.utils;
 
-import com.newwares.hypixelstats.api.modes.GameMode;
-import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.players.GameMode;
+import com.newwares.hypixelstats.players.Player;
 import com.newwares.hypixelstats.config.ConfigData;
 
 import java.io.IOException;
