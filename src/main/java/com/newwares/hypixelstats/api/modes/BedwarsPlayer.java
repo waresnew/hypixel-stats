@@ -2,17 +2,14 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class BedwarsPlayer extends PlayerDecorator {
-    private final Player player;
+public class BedwarsPlayer extends Player {
     private int finalKills = 0;
     private int finalDeaths = 0;
     private int bedBreaks = 0;
     private int bedLosses = 0;
-    private int level = 0;
 
-    public BedwarsPlayer(Player player) {
-        super(player.getUuid(), player.getUsername());
-        this.player = player;
+    public BedwarsPlayer(String uuid, String username) {
+        super(uuid, username);
     }
 
 
@@ -48,10 +45,6 @@ public class BedwarsPlayer extends PlayerDecorator {
             colour = ChatColour.RED;
         }
         return colour + String.valueOf(level) + "✫";
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public String getBblr() {

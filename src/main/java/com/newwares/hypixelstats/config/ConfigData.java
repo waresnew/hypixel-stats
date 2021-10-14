@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class ConfigData {
     private static ConfigData configData;
-    JsonObject jsonObject;
+    private JsonObject jsonObject;
     private String apiKey;
     private File configFile;
     private boolean enabledSpeedUhc;

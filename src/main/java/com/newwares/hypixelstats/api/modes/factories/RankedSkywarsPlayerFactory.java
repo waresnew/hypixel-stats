@@ -1,23 +1,39 @@
 package com.newwares.hypixelstats.api.modes.factories;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.PlayerCache;
 import com.newwares.hypixelstats.api.modes.Player;
 import com.newwares.hypixelstats.api.modes.RankedSkywarsPlayer;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.utils.StringUtils;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 public class RankedSkywarsPlayerFactory extends PlayerFactory {
+
+    private static RankedSkywarsPlayerFactory instance;
+
+    private RankedSkywarsPlayerFactory() {
+    }
+
+    public static RankedSkywarsPlayerFactory getInstance() {
+        if (instance == null) {
+            instance = new RankedSkywarsPlayerFactory();
+        }
+        return instance;
+    }
+
     @Override
-    public Player createPlayer(JsonObject jsonObject, String uuid, String username) {
+    public Player createPlayer(JsonObject jsonObject, String uuid, String username) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (isValidPlayer(jsonObject, "RANKED_SKYWARS", uuid, username)) {
             if (PlayerCache.getInstance().getCache(uuid, RankedSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                RankedSkywarsPlayer player = new RankedSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
+                RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
-                    setMainStats(playerJsonObject, skywarsObject, player);
+                    setMainStats(playerJsonObject, player);
                     if (skywarsObject.has("activeKit_RANKED"))
                         player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_RANKED").getAsString().replace("kit_ranked_ranked_", "")));
                     if (skywarsObject.has("levelFormatted"))
@@ -31,7 +47,7 @@ public class RankedSkywarsPlayerFactory extends PlayerFactory {
                     if (skywarsObject.has("losses_ranked"))
                         player.setLosses(skywarsObject.get("losses_ranked").getAsInt());
                 } else {
-                    player = new RankedSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
+                    player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

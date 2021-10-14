@@ -2,16 +2,13 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class SpeedUHCPlayer extends PlayerDecorator {
-    private final Player player;
-    private int level = 0;
+public class SpeedUHCPlayer extends Player {
     private String currentKit = "Default";
     private String currentMastery = "Wild specialist";
     private int score = 0;
 
-    public SpeedUHCPlayer(Player player) {
-        super(player.getUuid(), player.getUsername());
-        this.player = player;
+    public SpeedUHCPlayer(String uuid, String username) {
+        super(uuid, username);
     }
 
     @Override

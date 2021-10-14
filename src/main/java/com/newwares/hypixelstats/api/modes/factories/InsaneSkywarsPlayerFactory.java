@@ -1,23 +1,39 @@
 package com.newwares.hypixelstats.api.modes.factories;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.PlayerCache;
 import com.newwares.hypixelstats.api.modes.InsaneSkywarsPlayer;
 import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.utils.StringUtils;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 public class InsaneSkywarsPlayerFactory extends PlayerFactory {
+
+    private static InsaneSkywarsPlayerFactory instance;
+
+    private InsaneSkywarsPlayerFactory() {
+    }
+
+    public static InsaneSkywarsPlayerFactory getInstance() {
+        if (instance == null) {
+            instance = new InsaneSkywarsPlayerFactory();
+        }
+        return instance;
+    }
+
     @Override
-    public Player createPlayer(JsonObject jsonObject, String uuid, String username) {
+    public Player createPlayer(JsonObject jsonObject, String uuid, String username) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (isValidPlayer(jsonObject, "INSANE_SKYWARS", uuid, username)) {
             if (PlayerCache.getInstance().getCache(uuid, InsaneSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
+                InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
-                    setMainStats(playerJsonObject, skywarsObject, player);
+                    setMainStats(playerJsonObject, player);
                     if (skywarsObject.has("activeKit_TEAMS"))
                         player.setCurrentKit(StringUtils.toTitleCase(skywarsObject.get("activeKit_TEAMS").getAsString().substring(skywarsObject.get("activeKit_TEAMS").getAsString().lastIndexOf("_") + 1).replace("_", " ")));
                     if (skywarsObject.has("levelFormatted"))
@@ -40,7 +56,7 @@ public class InsaneSkywarsPlayerFactory extends PlayerFactory {
                         player.setLosses(player.getLosses() + skywarsObject.get("losses_team_insane").getAsInt());
 
                 } else {
-                    player = new InsaneSkywarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
+                    player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

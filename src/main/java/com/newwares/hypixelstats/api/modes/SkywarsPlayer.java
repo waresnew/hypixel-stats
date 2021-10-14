@@ -2,23 +2,22 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public abstract class SkywarsPlayer extends PlayerDecorator {
-    private final Player player;
-    private String level = ChatColour.GREY + "0☆";
+public abstract class SkywarsPlayer extends Player {
+    private String skywarsLevel = ChatColour.GREY + "0☆";
     private String currentKit = "Default";
 
-    public SkywarsPlayer(Player player) {
-        super(player.getUuid(), player.getUsername());
-        this.player = player;
+    public SkywarsPlayer(String uuid, String username) {
+        super(uuid, username);
     }
 
     @Override
     public String getLevel() {
-        return level;
+        return skywarsLevel;
     }
 
+
     public void setLevel(String level) {
-        this.level = level;
+        this.skywarsLevel = level;
     }
 
     public String getCurrentKit() {

@@ -1,6 +1,4 @@
-package com.newwares.hypixelstats.api;
-
-import com.newwares.hypixelstats.utils.JsonUtils;
+package com.newwares.hypixelstats.utils;
 
 import java.net.URL;
 

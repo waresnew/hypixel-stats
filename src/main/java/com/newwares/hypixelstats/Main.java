@@ -2,6 +2,8 @@ package com.newwares.hypixelstats;
 
 import com.newwares.hypixelstats.commands.StatCommand;
 import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.config.NickCache;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.handlers.GameEvent;
 import com.newwares.hypixelstats.handlers.WorldSwitch;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.io.File;
 import java.io.IOException;
 
 @Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
@@ -23,7 +26,10 @@ public class Main {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
-        ConfigData.getInstance().init(event.getModConfigurationDirectory().getParentFile());
+        File minecraftFolder = event.getModConfigurationDirectory().getParentFile();
+        ConfigData.getInstance().init(minecraftFolder);
+        PlayerCache.getInstance().init(minecraftFolder);
+        NickCache.getInstance().init(minecraftFolder);
     }
 
     @EventHandler

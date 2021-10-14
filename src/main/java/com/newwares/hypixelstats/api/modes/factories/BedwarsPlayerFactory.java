@@ -1,28 +1,37 @@
 package com.newwares.hypixelstats.api.modes.factories;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.api.PlayerCache;
 import com.newwares.hypixelstats.api.modes.BedwarsPlayer;
 import com.newwares.hypixelstats.api.modes.Player;
+import com.newwares.hypixelstats.config.PlayerCache;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class BedwarsPlayerFactory extends PlayerFactory {
 
+    private static BedwarsPlayerFactory instance;
+
+    private BedwarsPlayerFactory() {
+    }
+
+    public static BedwarsPlayerFactory getInstance() {
+        if (instance == null) {
+            instance = new BedwarsPlayerFactory();
+        }
+        return instance;
+    }
+
     @Override
-    public Player createPlayer(JsonObject jsonObject, String uuid, String username) {
+    public Player createPlayer(JsonObject jsonObject, String uuid, String username) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (isValidPlayer(jsonObject, "BEDWARS", uuid, username)) {
             if (PlayerCache.getInstance().getCache(uuid, BedwarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                BedwarsPlayer player = new BedwarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
-                if (playerJsonObject.has("rank") && !playerJsonObject.get("rank").getAsString().equals("NONE")) {
-                    player.setRank(playerJsonObject.get("rank").getAsString());
-                } else if (playerJsonObject.has("monthlyPackageRank") && playerJsonObject.get("monthlyPackageRank").getAsString().equals("SUPERSTAR")) {
-                    player.setRank(playerJsonObject.get("monthlyPackageRank").getAsString());
-                } else if (playerJsonObject.has("newPackageRank")) {
-                    player.setRank(playerJsonObject.get("newPackageRank").getAsString());
-                }
+                BedwarsPlayer player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
                 if (statJsonObject.has("Bedwars")) {
                     JsonObject bedwarsObject = statJsonObject.get("Bedwars").getAsJsonObject();
+                    setMainStats(playerJsonObject, player);
                     if (playerJsonObject.has("achievements")) {
                         JsonObject achievements = playerJsonObject.get("achievements").getAsJsonObject();
                         if (achievements.has("bedwars_level"))
@@ -47,7 +56,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
                     if (bedwarsObject.has("beds_lost_bedwars"))
                         player.setBedLosses(bedwarsObject.get("beds_lost_bedwars").getAsInt());
                 } else {
-                    player = new BedwarsPlayer(new Player(uuid, playerJsonObject.get("displayname").getAsString()));
+                    player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
                     PlayerCache.getInstance().updateCache(uuid, player);
                 }
 

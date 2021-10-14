@@ -1,9 +1,6 @@
 package com.newwares.hypixelstats.utils;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.*;
@@ -11,6 +8,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class JsonUtils {
+    private static Gson gson;
+
+    public static Gson getGson() {
+        if (gson == null) {
+            gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        }
+        return gson;
+    }
+
 
     public static JsonElement parseJson(URL url) throws IOException {
         JsonElement jsonElement;
@@ -46,8 +52,7 @@ public class JsonUtils {
     public static void writeJson(JsonObject jsonObject, File file) throws IOException {
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(jsonObject, bufferedWriter);
+        getGson().toJson(jsonObject, bufferedWriter);
         bufferedWriter.close();
     }
-
 }

@@ -2,19 +2,18 @@ package com.newwares.hypixelstats.api.modes;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 
-public class Player {
+public abstract class Player {
 
-    int kills = 0;
-    int deaths = 0;
-    int wins = 0;
-    int losses = 0;
-    int level = 0;
-    int ws = 0;
-    ChatColour rankColour = ChatColour.GREY;
-    boolean nicked = false;
-    String uuid;
-    String username;
-    boolean isBot;
+    protected int level = 0;
+    private int kills = 0;
+    private int deaths = 0;
+    private int wins = 0;
+    private int losses = 0;
+    private int ws = 0;
+    private ChatColour rankColour = ChatColour.GREY;
+    private String uuid;
+    private String username;
+    private long timeCreated;
 
     public Player(String uuid, String username) {
         this.uuid = uuid;
@@ -62,14 +61,6 @@ public class Player {
                 break;
             }
         }
-    }
-
-    public boolean isNicked() {
-        return nicked;
-    }
-
-    public void setNicked(boolean nicked) {
-        this.nicked = nicked;
     }
 
     public ChatColour getRankColour() {
@@ -204,25 +195,22 @@ public class Player {
         this.username = username;
     }
 
-    public boolean isBot() {
-        return isBot;
-    }
-
-    public void setBot(boolean bot) {
-        isBot = bot;
-    }
-
     public String translate() {
         return "[" + this.getLevel() + ChatColour.RESET + "] " + this.getRankColour() + this.getUsername() + ChatColour.RESET + " WS: " + this.getWs() + ChatColour.RESET + " WLR: " + this.getWlr() + ChatColour.RESET + " KDR: " + this.getKdr() + ChatColour.RESET + " ";
     }
 
-    public String getLevel() {
-        return String.valueOf(level);
-    }
+    public abstract String getLevel();
 
     public void setLevel(int level) {
         this.level = level;
     }
 
 
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
+    }
 }

@@ -3,11 +3,9 @@ package com.newwares.hypixelstats.handlers;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
-import com.newwares.hypixelstats.utils.ChatColour;
-import com.newwares.hypixelstats.utils.ChatUtils;
-import com.newwares.hypixelstats.utils.JsonUtils;
-import com.newwares.hypixelstats.utils.StatDisplayUtils;
+import com.newwares.hypixelstats.utils.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -16,7 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TreeMap;
 
 public class GameEvent {
     private static final ArrayList<String> playerList = new ArrayList<>();
@@ -51,18 +53,25 @@ public class GameEvent {
                                     String[] result = DenickerInvoker.denick(gameProfile);
                                     if (result != null) {
                                         ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
+                                        NickCache.getInstance().updateCache(gameProfile.getName(), result[1]);
                                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                             try {
-                                                StatDisplayUtils.stat(gametype, mode, result[1], result[0], true);
-                                            } catch (IOException e) {
+                                                StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
+                                            } catch (IOException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                                                 e.printStackTrace();
                                             }
 
                                         }
                                     } else {
-                                        ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
+                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(gameProfile.getName());
+                                        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+                                        if (!map.isEmpty()) {
+                                            ChatUtils.print(ChatColour.RED + gameProfile.getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
+                                        } else {
+                                            ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
+                                        }
                                     }
-                                } catch (IllegalStateException ignored) {
+                                } catch (IllegalStateException | IOException ignored) {
                                     ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
                                 }
                             }
@@ -73,8 +82,8 @@ public class GameEvent {
                             playerList.add(gameProfile.getId().toString().replace("-", ""));
                             if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                 try {
-                                    StatDisplayUtils.stat(gametype, mode, gameProfile.getId().toString(), gameProfile.getName(), true);
-                                } catch (IOException e) {
+                                    StatDisplayUtils.stat(gametype, mode, gameProfile.getId().toString(), gameProfile.getName());
+                                } catch (IOException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
 
