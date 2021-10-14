@@ -4,7 +4,7 @@
 
 Your average hypixel queue dodger mod
 
-this is probably the only minecraft mod i make which actually uses objects so i tried to stick a factory pattern in
+this is probably the only minecraft mod i will ever make which actually uses objects so i tried to stick a factory pattern in
 
 ![image](https://user-images.githubusercontent.com/45801973/136713738-0835e4e3-5cae-4510-beb0-c59c79636723.png)
 
