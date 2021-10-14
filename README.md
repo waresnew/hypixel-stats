@@ -19,8 +19,6 @@ this is probably the only minecraft mod i will ever make which actually uses obj
 
 run /api new to set your api key and join a game
 
-this mod prints stats to the chat
-
 supported modes: speeduhc, ranked sw, insane sw, normal sw, bedwars
 
 known issue: it will print out the stats of the bots that briefly appear at the start of a game (this bug is fixed with [this mod](https://github.com/waresnew/remove-fake-players))
@@ -37,3 +35,7 @@ go check out [DuelSniffer](https://github.com/exejar/DuelSniffer) if you want a 
   manually prints out the stats for a player depending on the gamemode
   
   alias = `hs`
+  
+- /hypixelstats nicks <nick>
+  
+  views the usernames associated with the nick and the date they were found
