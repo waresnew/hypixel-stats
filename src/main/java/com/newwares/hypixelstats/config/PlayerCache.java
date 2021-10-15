@@ -82,11 +82,11 @@ public class PlayerCache {
         bufferedWriter.close();
     }
 
-    public <T extends Player> T getCache(String uuid, Class<T> type) {
+    public <T extends Player> T getCache(String uuid, Class<T> type) throws IOException {
         if (nameCache.get(uuid) != null) {
             Player player = nameCache.get(uuid).get(type.getSimpleName());
             if (player != null && System.currentTimeMillis() - player.getTimeCreated() >= 4 * 24 * 60 * 60 * 1000) {
-                nameCache.remove(uuid);
+                removePlayer(uuid);
                 return null;
             }
             return type.cast(nameCache.get(uuid).get(type.getSimpleName()));
