@@ -1,7 +1,7 @@
 package com.newwares.hypixelstats;
 
 import com.newwares.hypixelstats.commands.StatCommand;
-import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.handlers.GameEvent;
@@ -27,7 +27,7 @@ public class Main {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         File minecraftFolder = event.getModConfigurationDirectory().getParentFile();
-        ConfigData.getInstance().init(minecraftFolder);
+        ModConfig.getInstance().init(minecraftFolder);
         PlayerCache.getInstance().init(minecraftFolder);
         NickCache.getInstance().init(minecraftFolder);
     }

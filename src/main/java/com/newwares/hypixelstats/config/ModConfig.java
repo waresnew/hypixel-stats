@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ConfigData {
-    private static ConfigData configData;
+public class ModConfig {
+    private static ModConfig modConfig;
     private JsonObject jsonObject;
     private String apiKey;
     private File configFile;
@@ -19,15 +19,15 @@ public class ConfigData {
     private boolean enabledBedwars;
 
 
-    private ConfigData() {
+    private ModConfig() {
 
     }
 
-    public static ConfigData getInstance() {
-        if (configData == null) {
-            configData = new ConfigData();
+    public static ModConfig getInstance() {
+        if (modConfig == null) {
+            modConfig = new ModConfig();
         }
-        return configData;
+        return modConfig;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

@@ -1,4 +1,4 @@
-package com.newwares.hypixelstats.players;
+package com.newwares.hypixelstats.hypixel;
 
 import com.newwares.hypixelstats.utils.ChatColour;
 

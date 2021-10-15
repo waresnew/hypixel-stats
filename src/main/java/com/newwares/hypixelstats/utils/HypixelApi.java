@@ -1,10 +1,10 @@
 package com.newwares.hypixelstats.utils;
 
 import com.google.gson.JsonObject;
-import com.newwares.hypixelstats.players.GameMode;
-import com.newwares.hypixelstats.players.Player;
-import com.newwares.hypixelstats.players.factories.PlayerFactory;
-import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.hypixel.GameMode;
+import com.newwares.hypixelstats.hypixel.Player;
+import com.newwares.hypixelstats.hypixel.factories.PlayerFactory;
+import com.newwares.hypixelstats.config.ModConfig;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +15,7 @@ public class HypixelApi {
 
 
     public static Player setStats(GameMode game, String uuid, String username) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ConfigData.getInstance().getApiKey(), uuid))).getAsJsonObject();
+        JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ModConfig.getInstance().getApiKey(), uuid))).getAsJsonObject();
         System.out.println("HypixelStats checking: " + uuid);
         Player toReturn = null;
         for (GameMode gameMode : GameMode.values()) {

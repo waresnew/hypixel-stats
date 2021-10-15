@@ -2,7 +2,7 @@ package com.newwares.hypixelstats.handlers;
 
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import com.newwares.hypixelstats.config.ConfigData;
+import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
 import com.newwares.hypixelstats.utils.*;
@@ -39,10 +39,11 @@ public class GameEvent {
             if (world != Minecraft.getMinecraft().theWorld) {
                 world = Minecraft.getMinecraft().theWorld;
                 playerinfos.clear();
+                playerList.clear();
                 receivedLocraw = false;
             }
 
-            if (receivedLocraw && Minecraft.getMinecraft().playerController.getCurrentGameType().getName().equals("adventure")) {
+            if (receivedLocraw) {
                 new Thread(() -> {
                     ArrayList<GameProfile> copy = new ArrayList<>(playerinfos);
                     for (GameProfile gameProfile : copy) {
@@ -130,11 +131,11 @@ public class GameEvent {
             }).start();
         } else if (msg.startsWith("Your new API key is")) {
             try {
-                ConfigData.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
+                ModConfig.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set players key");
+            ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set hypixel key");
         }
     }
 

@@ -1,8 +1,8 @@
 package com.newwares.hypixelstats.config;
 
 import com.google.gson.reflect.TypeToken;
-import com.newwares.hypixelstats.players.GameMode;
-import com.newwares.hypixelstats.players.Player;
+import com.newwares.hypixelstats.hypixel.GameMode;
+import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.utils.JsonUtils;
 
 import java.io.*;
@@ -46,7 +46,7 @@ public class PlayerCache {
             while ((line = bufferedReader.readLine()) != null) {
                 json.append(line);
             }
-            Type type = new TypeToken<HashMap<String, HashMap<String, Object>>>() {
+            Type type = new TypeToken<HashMap<String, HashMap<String, Player>>>() {
             }.getType();
             nameCache = JsonUtils.getGson().fromJson(json.toString(), type);
         }
