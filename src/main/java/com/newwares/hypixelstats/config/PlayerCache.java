@@ -58,7 +58,8 @@ public class PlayerCache {
         nameCache.get(uuid).put(player.getClass().getSimpleName(), player);
         FileWriter fileWriter = new FileWriter(cacheFile);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        JsonUtils.getGson().toJson(nameCache, bufferedWriter);
+        HashMap<String, HashMap<String, Player>> copy = new HashMap<>(nameCache);
+        JsonUtils.getGson().toJson(copy, bufferedWriter);
         bufferedWriter.close();
     }
 

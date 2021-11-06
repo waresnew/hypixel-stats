@@ -19,7 +19,6 @@ public class WorldSwitch {
         if (world != Minecraft.getMinecraft().theWorld) {
             this.world = Minecraft.getMinecraft().theWorld;
             Executors.newSingleThreadScheduledExecutor().schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/locraw"), 500, TimeUnit.MILLISECONDS);
-            GameEvent.clearPlayerList();
         }
     }
 

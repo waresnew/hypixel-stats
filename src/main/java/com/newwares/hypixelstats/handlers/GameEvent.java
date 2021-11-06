@@ -7,6 +7,7 @@ import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
 import com.newwares.hypixelstats.utils.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -22,15 +23,12 @@ import java.util.TreeMap;
 
 public class GameEvent {
     private static final ArrayList<String> playerList = new ArrayList<>();
-    public static ArrayList<GameProfile> playerinfos = new ArrayList<>();
+    public static ArrayList<NetworkPlayerInfo> playerinfos = new ArrayList<>();
     private String mode;
     private String gametype;
     private boolean receivedLocraw = false;
     private World world;
-
-    public static void clearPlayerList() {
-        playerList.clear();
-    }
+    public static boolean someoneHas1Ping = false;
 
 
     @SubscribeEvent
@@ -41,20 +39,24 @@ public class GameEvent {
                 playerinfos.clear();
                 playerList.clear();
                 receivedLocraw = false;
+                someoneHas1Ping = false;
             }
 
             if (receivedLocraw) {
                 new Thread(() -> {
-                    ArrayList<GameProfile> copy = new ArrayList<>(playerinfos);
-                    for (GameProfile gameProfile : copy) {
-                        if (!playerList.contains(gameProfile.getId().toString().replace("-", ""))) {
-                            if (Integer.parseInt(gameProfile.getId().toString().replace("-", "").substring(12, 13)) == 1) {
-                                playerList.add(gameProfile.getId().toString().replace("-", ""));
+                    ArrayList<NetworkPlayerInfo> copy = new ArrayList<>(playerinfos);
+                    for (NetworkPlayerInfo networkInfo : copy) {
+                        if (!playerList.contains(networkInfo.getGameProfile().getName())) {
+                            if (Integer.parseInt(networkInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
+                                playerList.add(networkInfo.getGameProfile().getName());
+                                if (someoneHas1Ping && networkInfo.getResponseTime() > 1) {
+                                    continue;
+                                }
                                 try {
-                                    String[] result = DenickerInvoker.denick(gameProfile);
+                                    String[] result = DenickerInvoker.denick(networkInfo.getGameProfile());
                                     if (result != null) {
-                                        ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked! (" + result[0] + ")");
-                                        NickCache.getInstance().updateCache(gameProfile.getName(), result[1]);
+                                        ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked! (" + result[0] + ")");
+                                        NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName(), result[1]);
                                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                             try {
                                                 StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
@@ -64,26 +66,29 @@ public class GameEvent {
 
                                         }
                                     } else {
-                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(gameProfile.getName());
+                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName());
                                         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
                                         if (!map.isEmpty()) {
-                                            ChatUtils.print(ChatColour.RED + gameProfile.getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
+                                            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
                                         } else {
-                                            ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
+                                            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked!");
                                         }
                                     }
                                 } catch (IllegalStateException | IOException ignored) {
-                                    ChatUtils.print(ChatColour.RED + gameProfile.getName() + " is nicked!");
+                                    ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked!");
                                 }
                             }
                         }
                     }
-                    for (GameProfile gameProfile : copy) {
-                        if (!playerList.contains(gameProfile.getId().toString().replace("-", ""))) {
-                            playerList.add(gameProfile.getId().toString().replace("-", ""));
+                    for (NetworkPlayerInfo networkInfo : copy) {
+                        if (!playerList.contains(networkInfo.getGameProfile().getName())) {
+                            playerList.add(networkInfo.getGameProfile().getName());
+                            if (someoneHas1Ping && networkInfo.getResponseTime() > 1) {
+                                continue;
+                            }
                             if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                 try {
-                                    StatDisplayUtils.stat(gametype, mode, gameProfile.getId().toString(), gameProfile.getName());
+                                    StatDisplayUtils.stat(gametype, mode, networkInfo.getGameProfile().getId().toString(), networkInfo.getGameProfile().getName());
                                 } catch (IOException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
