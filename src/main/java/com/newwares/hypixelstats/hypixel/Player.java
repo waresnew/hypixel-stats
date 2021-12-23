@@ -1,8 +1,8 @@
 package com.newwares.hypixelstats.hypixel;
 
 import com.newwares.hypixelstats.utils.ChatColour;
-
-public abstract class Player {
+//not abstract for serialization purposes
+public class Player {
 
     protected int level = 0;
     private int kills = 0;
@@ -18,6 +18,10 @@ public abstract class Player {
     public Player(String uuid, String username) {
         this.uuid = uuid;
         this.username = username;
+    }
+
+    public Player() {
+
     }
 
     @Override
@@ -199,7 +203,9 @@ public abstract class Player {
         return "[" + this.getLevel() + ChatColour.RESET + "] " + this.getRankColour() + this.getUsername() + ChatColour.RESET + " WS: " + this.getWs() + ChatColour.RESET + " WLR: " + this.getWlr() + ChatColour.RESET + " KDR: " + this.getKdr() + ChatColour.RESET + " ";
     }
 
-    public abstract String getLevel();
+    public String getLevel() {
+        throw new IllegalStateException("getLevel() was not overridden");
+    }
 
     public void setLevel(int level) {
         this.level = level;

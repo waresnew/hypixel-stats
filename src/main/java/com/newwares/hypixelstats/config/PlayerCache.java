@@ -36,24 +36,24 @@ public class PlayerCache {
         if (!new File(directory.getPath() + "\\HypixelStats").exists()) {
             new File(directory.getPath() + "\\HypixelStats").mkdir();
         }
-        if (!new File(directory.getPath() + "\\HypixelStats\\cache.json").exists()) {
-            new File(directory.getPath() + "\\HypixelStats\\cache.json").createNewFile();
-            cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.json");
+        cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.json");
+        if (!cacheFile.exists()) {
+            cacheFile.createNewFile();
             FileWriter fileWriter = new FileWriter(cacheFile);
             fileWriter.write("{}");
             fileWriter.flush();
             fileWriter.close();
-            FileReader fileReader = new FileReader(cacheFile);
-            StringBuilder json = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                json.append(line);
-            }
-            Type type = new TypeToken<HashMap<String, HashMap<String, Player>>>() {
-            }.getType();
-            nameCache = JsonUtils.getGson().fromJson(json.toString(), type);
         }
+        FileReader fileReader = new FileReader(cacheFile);
+        StringBuilder json = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            json.append(line);
+        }
+        Type type = new TypeToken<HashMap<String, HashMap<String, Player>>>() {
+        }.getType();
+        nameCache = JsonUtils.getGson().fromJson(json.toString(), type);
         cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.json");
     }
 

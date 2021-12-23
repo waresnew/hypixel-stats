@@ -42,7 +42,6 @@ public class ModConfig {
             fileWriter.write("{}");
             fileWriter.flush();
             fileWriter.close();
-            jsonObject = JsonUtils.parseJson(configFile).getAsJsonObject();
         }
         configFile = new File(directory.getPath() + "\\HypixelStats\\config.json");
         jsonObject = JsonUtils.parseJson(configFile).getAsJsonObject();

@@ -55,6 +55,10 @@ public class StatCommand extends CommandBase {
                 if (args[0].equals("nicks")) {
                     TreeMap<String, Long> uuids = NickCache.getInstance().getCache(username);
                     StringBuilder uuidList = new StringBuilder();
+                    if (uuids == null) {
+                        ChatUtils.print(ChatColour.RED+"No usernames found.");
+                        return;
+                    }
                     if (!uuids.isEmpty()) {
                         for (Map.Entry<String, Long> uuid : uuids.entrySet()) {
                             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
@@ -62,6 +66,7 @@ public class StatCommand extends CommandBase {
                         }
                     }
                     ChatUtils.print(uuidList.toString());
+                    return;
                 }
                 String uuid;
                 uuid = MojangApi.usernameToUuid(username);

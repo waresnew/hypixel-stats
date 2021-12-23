@@ -30,25 +30,25 @@ public class NickCache {
         if (!new File(directory.getPath() + "\\HypixelStats").exists()) {
             new File(directory.getPath() + "\\HypixelStats").mkdir();
         }
-        if (!new File(directory.getPath() + "\\HypixelStats\\nicks.json").exists()) {
-            new File(directory.getPath() + "\\HypixelStats\\nicks.json").createNewFile();
-            nickFile = new File(directory.getPath() + "\\HypixelStats\\nicks.json");
+        nickFile = new File(directory.getPath() + "\\HypixelStats\\nicks.json");
+        if (!nickFile.exists()) {
+            nickFile.createNewFile();
             FileWriter fileWriter = new FileWriter(nickFile);
             fileWriter.write("{}");
             fileWriter.flush();
             fileWriter.close();
-            FileReader fileReader = new FileReader(nickFile);
-            StringBuilder json = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                json.append(line);
-            }
-            Type type = new TypeToken<HashMap<String, TreeMap<String, Long>>>() {
-            }.getType();
-            nickCache = JsonUtils.getGson().fromJson(json.toString(), type);
         }
-        nickFile = new File(directory.getPath() + "\\HypixelStats\\nicks.json");
+
+        FileReader fileReader = new FileReader(nickFile);
+        StringBuilder json = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            json.append(line);
+        }
+        Type type = new TypeToken<HashMap<String, TreeMap<String, Long>>>() {
+        }.getType();
+        nickCache = JsonUtils.getGson().fromJson(json.toString(), type);
     }
 
     public void updateCache(String nick, String uuid) throws IOException {
@@ -62,7 +62,6 @@ public class NickCache {
     }
 
     public TreeMap<String, Long> getCache(String nick) {
-        nickCache.computeIfAbsent(nick, k -> new TreeMap<>());
         for (String key : nickCache.keySet()) {
             if (key.equalsIgnoreCase(nick)) {
                 return nickCache.get(key);
