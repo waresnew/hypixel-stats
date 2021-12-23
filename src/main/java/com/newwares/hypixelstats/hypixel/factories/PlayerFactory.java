@@ -1,9 +1,10 @@
 package com.newwares.hypixelstats.hypixel.factories;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
-import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.utils.ChatColour;
 import com.newwares.hypixelstats.utils.ChatUtils;
 
@@ -29,9 +30,12 @@ public abstract class PlayerFactory {
         } else if (Integer.parseInt(uuid.substring(12, 13)) == 2) {
             return false;
         }
-        JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
+        JsonElement playerJsonObject = jsonObject.get("player");
+        if (playerJsonObject == null) {
+            return false;
+        }
         GameMode type = GameMode.valueOf(game);
-        if (!playerJsonObject.has("stats")) {
+        if (!playerJsonObject.getAsJsonObject().has("stats")) {
             PlayerCache.getInstance().updateCache(uuid, username, type);
             return false;
         }

@@ -1,9 +1,9 @@
 package com.newwares.hypixelstats.hypixel.factories;
 
 import com.google.gson.JsonObject;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.hypixel.NormalSkywarsPlayer;
 import com.newwares.hypixelstats.hypixel.Player;
-import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.utils.StringUtils;
 
 import java.io.IOException;

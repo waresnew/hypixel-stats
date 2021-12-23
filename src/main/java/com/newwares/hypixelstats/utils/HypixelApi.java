@@ -1,10 +1,10 @@
 package com.newwares.hypixelstats.utils;
 
 import com.google.gson.JsonObject;
+import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.hypixel.factories.PlayerFactory;
-import com.newwares.hypixelstats.config.ModConfig;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

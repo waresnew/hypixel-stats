@@ -6,6 +6,7 @@ import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.handlers.GameEvent;
 import com.newwares.hypixelstats.handlers.WorldSwitch;
+import com.newwares.hypixelstats.hypixel.Player;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
@@ -17,6 +18,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
 public class Main {
@@ -37,6 +41,16 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new GameEvent());
         MinecraftForge.EVENT_BUS.register(new WorldSwitch());
         ClientCommandHandler.instance.registerCommand(new StatCommand());
+        HashMap<String, HashMap<String, Player>> cache = PlayerCache.getInstance().getCache();
+        ArrayList<String> toRemove = new ArrayList<>();
+        for (Map.Entry<String, HashMap<String, Player>> entry : cache.entrySet()) {
+            for (Player player : entry.getValue().values()) {
+                if (System.currentTimeMillis() - player.getTimeCreated() >= 4 * 24 * 60 * 60 * 1000) {
+                    toRemove.add(entry.getKey());
+                }
+            }
+        }
+        toRemove.forEach(PlayerCache.getInstance()::removePlayer);
     }
 
     @EventHandler

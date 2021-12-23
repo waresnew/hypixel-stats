@@ -1,7 +1,6 @@
 package com.newwares.hypixelstats.handlers;
 
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.config.NickCache;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;

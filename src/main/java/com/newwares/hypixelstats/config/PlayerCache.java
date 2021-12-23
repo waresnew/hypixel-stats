@@ -20,6 +20,10 @@ public class PlayerCache {
     private PlayerCache() {
     }
 
+    public HashMap<String, HashMap<String, Player>> getCache() {
+        return nameCache;
+    }
+
     public static PlayerCache getInstance() {
         if (playerCache == null) {
             playerCache = new PlayerCache();
@@ -75,21 +79,20 @@ public class PlayerCache {
         bufferedWriter.close();
     }
 
-    public void removePlayer(String uuid) throws IOException {
+    public void removePlayer(String uuid) {
         nameCache.remove(uuid);
-        FileWriter fileWriter = new FileWriter(cacheFile);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        JsonUtils.getGson().toJson(nameCache, bufferedWriter);
-        bufferedWriter.close();
+        try {
+            FileWriter fileWriter = new FileWriter(cacheFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            JsonUtils.getGson().toJson(nameCache, bufferedWriter);
+            bufferedWriter.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public <T extends Player> T getCache(String uuid, Class<T> type) throws IOException {
         if (nameCache.get(uuid) != null) {
-            Player player = nameCache.get(uuid).get(type.getSimpleName());
-            if (player != null && System.currentTimeMillis() - player.getTimeCreated() >= 4 * 24 * 60 * 60 * 1000) {
-                removePlayer(uuid);
-                return null;
-            }
             return type.cast(nameCache.get(uuid).get(type.getSimpleName()));
         } else {
             return null;

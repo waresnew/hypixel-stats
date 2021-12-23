@@ -63,6 +63,11 @@ public class NickCache {
 
     public TreeMap<String, Long> getCache(String nick) {
         nickCache.computeIfAbsent(nick, k -> new TreeMap<>());
+        for (String key : nickCache.keySet()) {
+            if (key.equalsIgnoreCase(nick)) {
+                return nickCache.get(key);
+            }
+        }
         return nickCache.get(nick);
     }
 

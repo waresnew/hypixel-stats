@@ -1,9 +1,9 @@
 package com.newwares.hypixelstats.hypixel.factories;
 
 import com.google.gson.JsonObject;
+import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.hypixel.BedwarsPlayer;
 import com.newwares.hypixelstats.hypixel.Player;
-import com.newwares.hypixelstats.config.PlayerCache;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
