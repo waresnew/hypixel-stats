@@ -12,7 +12,7 @@ public class JsonUtils {
 
     public static Gson getGson() {
         if (gson == null) {
-            gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+            gson = new GsonBuilder().disableHtmlEscaping().create();
         }
         return gson;
     }

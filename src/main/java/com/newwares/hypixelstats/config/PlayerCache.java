@@ -4,8 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.utils.JsonUtils;
-import org.apache.commons.io.FileUtils;
-import org.nustaq.serialization.FSTConfiguration;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +15,6 @@ public class PlayerCache {
     private File cacheFile;
 
     private HashMap<String, HashMap<String, Player>> nameCache = new HashMap<>();
-    private final FSTConfiguration fstConfig = FSTConfiguration.createDefaultConfiguration();
-
 
     private PlayerCache() {
     }
@@ -39,26 +35,34 @@ public class PlayerCache {
         if (!new File(directory.getPath() + "\\HypixelStats").exists()) {
             new File(directory.getPath() + "\\HypixelStats").mkdir();
         }
-        cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.ser");
+        cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.json");
         if (!cacheFile.exists()) {
             cacheFile.createNewFile();
-            byte[] bytes = fstConfig.asByteArray(nameCache);
-            FileOutputStream fileOutputStream = new FileOutputStream(cacheFile);
-            fileOutputStream.write(bytes);
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            FileWriter fileWriter = new FileWriter(cacheFile);
+            fileWriter.write("{}");
+            fileWriter.flush();
+            fileWriter.close();
         }
-        nameCache = (HashMap<String, HashMap<String, Player>>) fstConfig.asObject(FileUtils.readFileToByteArray(cacheFile));
+        FileReader fileReader = new FileReader(cacheFile);
+        StringBuilder json = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            json.append(line);
+        }
+        Type type = new TypeToken<HashMap<String, HashMap<String, Player>>>() {
+        }.getType();
+        nameCache = JsonUtils.getGson().fromJson(json.toString(), type);
     }
 
     public void updateCache(String uuid, Player player) throws IOException {
         nameCache.computeIfAbsent(uuid, k -> new HashMap<>());
         nameCache.get(uuid).put(player.getClass().getSimpleName(), player);
-        byte[] bytes = fstConfig.asByteArray(nameCache);
-        FileOutputStream fileOutputStream = new FileOutputStream(cacheFile);
-        fileOutputStream.write(bytes);
-        fileOutputStream.flush();
-        fileOutputStream.close();
+        FileWriter fileWriter = new FileWriter(cacheFile);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        HashMap<String, HashMap<String, Player>> copy = new HashMap<>(nameCache);
+        JsonUtils.getGson().toJson(copy, bufferedWriter);
+        bufferedWriter.close();
     }
 
     /**
@@ -66,22 +70,17 @@ public class PlayerCache {
      */
     public void updateCache(String uuid, String username, GameMode player) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         nameCache.computeIfAbsent(uuid, k -> new HashMap<>());
-        nameCache.get(uuid).put(player.getClass().getSimpleName(), player.getType().getConstructor(String.class, String.class).newInstance(uuid, username));
-        byte[] bytes = fstConfig.asByteArray(nameCache);
-        FileOutputStream fileOutputStream = new FileOutputStream(cacheFile);
-        fileOutputStream.write(bytes);
-        fileOutputStream.flush();
-        fileOutputStream.close();
+        updateCache(uuid, player.getType().getConstructor(String.class, String.class).newInstance(uuid, username));
     }
 
     public void removePlayer(String uuid) {
         nameCache.remove(uuid);
         try {
-            byte[] bytes = fstConfig.asByteArray(nameCache);
-            FileOutputStream fileOutputStream = new FileOutputStream(cacheFile);
-            fileOutputStream.write(bytes);
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            FileWriter fileWriter = new FileWriter(cacheFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            HashMap<String, HashMap<String, Player>> copy = new HashMap<>(nameCache);
+            JsonUtils.getGson().toJson(copy, bufferedWriter);
+            bufferedWriter.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
