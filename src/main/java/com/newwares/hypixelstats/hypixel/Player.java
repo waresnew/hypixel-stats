@@ -1,8 +1,10 @@
 package com.newwares.hypixelstats.hypixel;
 
 import com.newwares.hypixelstats.utils.ChatColour;
-//not abstract for serialization purposes
-public class Player {
+
+import java.io.Serializable;
+
+public abstract class Player implements Serializable {
 
     protected int level = 0;
     private int kills = 0;
@@ -203,9 +205,7 @@ public class Player {
         return "[" + this.getLevel() + ChatColour.RESET + "] " + this.getRankColour() + this.getUsername() + ChatColour.RESET + " WS: " + this.getWs() + ChatColour.RESET + " WLR: " + this.getWlr() + ChatColour.RESET + " KDR: " + this.getKdr() + ChatColour.RESET + " ";
     }
 
-    public String getLevel() {
-        throw new IllegalStateException("getLevel() was not overridden");
-    }
+    public abstract String getLevel();
 
     public void setLevel(int level) {
         this.level = level;

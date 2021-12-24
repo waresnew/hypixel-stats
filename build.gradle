@@ -65,6 +65,8 @@ dependencies {
     //  compile group: "net.java.dev.jna", name: "jna", version: "5.8.0"
     //compile 'org.spongepowered:mixin:0.8.2'
     compile "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+    implementation 'de.ruedigermoeller:fst:2.57'
+
 }
 
 
