@@ -8,8 +8,8 @@ public class BedwarsPlayer extends Player {
     private int bedBreaks = 0;
     private int bedLosses = 0;
 
-    public BedwarsPlayer(String uuid, String username) {
-        super(uuid, username);
+    public BedwarsPlayer(String uuid, String username, GameMode mode) {
+        super(uuid, username, mode);
     }
 
 

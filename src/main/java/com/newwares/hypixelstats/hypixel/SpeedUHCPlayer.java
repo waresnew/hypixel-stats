@@ -7,8 +7,8 @@ public class SpeedUHCPlayer extends Player {
     private String currentMastery = "Wild specialist";
     private int score = 0;
 
-    public SpeedUHCPlayer(String uuid, String username) {
-        super(uuid, username);
+    public SpeedUHCPlayer(String uuid, String username, GameMode mode) {
+        super(uuid, username, mode);
     }
 
     @Override

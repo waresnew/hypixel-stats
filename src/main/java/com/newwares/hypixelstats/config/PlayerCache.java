@@ -86,9 +86,9 @@ public class PlayerCache {
         }
     }
 
-    public <T extends Player> T getCache(String uuid, Class<T> type) throws IOException {
+    public Player getCache(String uuid, Class<?> type) throws IOException {
         if (nameCache.get(uuid) != null) {
-            return type.cast(nameCache.get(uuid).get(type.getSimpleName()));
+            return nameCache.get(uuid).get(type.getSimpleName());
         } else {
             return null;
         }

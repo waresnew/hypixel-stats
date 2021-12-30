@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.hypixel.factories;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.config.PlayerCache;
+import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.hypixel.SpeedUHCPlayer;
 import com.newwares.hypixelstats.utils.StringUtils;
@@ -29,7 +30,7 @@ public class SpeedUHCPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, SpeedUHCPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                SpeedUHCPlayer player = new SpeedUHCPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                SpeedUHCPlayer player = new SpeedUHCPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.SPEED_UHC);
                 if (statJsonObject.has("SpeedUHC")) {
                     JsonObject speedUHCObject = statJsonObject.get("SpeedUHC").getAsJsonObject();
                     setMainStats(playerJsonObject, player);
@@ -45,7 +46,7 @@ public class SpeedUHCPlayerFactory extends PlayerFactory {
                     if (speedUHCObject.has("kills")) player.setKills(speedUHCObject.get("kills").getAsInt());
                     if (speedUHCObject.has("deaths")) player.setDeaths(speedUHCObject.get("deaths").getAsInt());
                 } else {
-                    player = new SpeedUHCPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                    player = new SpeedUHCPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.SPEED_UHC);
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

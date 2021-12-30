@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.hypixel.factories;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.config.PlayerCache;
+import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.hypixel.RankedSkywarsPlayer;
 import com.newwares.hypixelstats.utils.StringUtils;
@@ -29,7 +30,7 @@ public class RankedSkywarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, RankedSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS);
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
@@ -47,7 +48,7 @@ public class RankedSkywarsPlayerFactory extends PlayerFactory {
                     if (skywarsObject.has("losses_ranked"))
                         player.setLosses(skywarsObject.get("losses_ranked").getAsInt());
                 } else {
-                    player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                    player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS);
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

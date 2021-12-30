@@ -3,6 +3,7 @@ package com.newwares.hypixelstats.hypixel.factories;
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.config.PlayerCache;
 import com.newwares.hypixelstats.hypixel.BedwarsPlayer;
+import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, BedwarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                BedwarsPlayer player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                BedwarsPlayer player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS);
                 if (statJsonObject.has("Bedwars")) {
                     JsonObject bedwarsObject = statJsonObject.get("Bedwars").getAsJsonObject();
                     setMainStats(playerJsonObject, player);
@@ -56,7 +57,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
                     if (bedwarsObject.has("beds_lost_bedwars"))
                         player.setBedLosses(bedwarsObject.get("beds_lost_bedwars").getAsInt());
                 } else {
-                    player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                    player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS);
                     PlayerCache.getInstance().updateCache(uuid, player);
                 }
 

@@ -2,6 +2,7 @@ package com.newwares.hypixelstats.hypixel.factories;
 
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.config.PlayerCache;
+import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.NormalSkywarsPlayer;
 import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.utils.StringUtils;
@@ -29,7 +30,7 @@ public class NormalSkywarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, NormalSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                NormalSkywarsPlayer player = new NormalSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                NormalSkywarsPlayer player = new NormalSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.NORMAL_SKYWARS);
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
@@ -55,7 +56,7 @@ public class NormalSkywarsPlayerFactory extends PlayerFactory {
                     if (skywarsObject.has("losses_team_normal"))
                         player.setLosses(player.getLosses() + skywarsObject.get("losses_team_normal").getAsInt());
                 } else {
-                    player = new NormalSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString());
+                    player = new NormalSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.NORMAL_SKYWARS);
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

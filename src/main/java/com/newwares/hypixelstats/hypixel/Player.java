@@ -14,10 +14,12 @@ public class Player {
     private String uuid;
     private String username;
     private long timeCreated;
+    private GameMode mode;
 
-    public Player(String uuid, String username) {
+    public Player(String uuid, String username, GameMode mode) {
         this.uuid = uuid;
         this.username = username;
+        this.mode = mode;
     }
 
     public Player() {
@@ -219,5 +221,9 @@ public class Player {
 
     public void setTimeCreated(long timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    public GameMode getMode() {
+        return mode;
     }
 }

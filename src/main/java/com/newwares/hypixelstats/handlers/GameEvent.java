@@ -18,10 +18,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 public class GameEvent {
-    private static final ArrayList<String> playerList = new ArrayList<>();
+    private static final HashSet<String> playerList = new HashSet<>();
     public static ArrayList<NetworkPlayerInfo> playerinfos = new ArrayList<>();
     private String mode;
     private String gametype;
@@ -45,9 +46,9 @@ public class GameEvent {
                 new Thread(() -> {
                     ArrayList<NetworkPlayerInfo> copy = new ArrayList<>(playerinfos);
                     for (NetworkPlayerInfo networkInfo : copy) {
-                        if (!playerList.contains(networkInfo.getGameProfile().getName())) {
+                        if (!playerList.contains(networkInfo.getGameProfile().getId().toString().replace("-", ""))) {
                             if (Integer.parseInt(networkInfo.getGameProfile().getId().toString().replace("-", "").substring(12, 13)) == 1) {
-                                playerList.add(networkInfo.getGameProfile().getName());
+                                playerList.add(networkInfo.getGameProfile().getId().toString().replace("-", ""));
                                 if (someoneHas1Ping && networkInfo.getResponseTime() > 1) {
                                     continue;
                                 }
@@ -55,7 +56,7 @@ public class GameEvent {
                                     String[] result = DenickerInvoker.denick(networkInfo.getGameProfile());
                                     if (result != null) {
                                         ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked! (" + result[0] + ")");
-                                        NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName(), result[1]);
+                                        NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""), result[1]);
                                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                             try {
                                                 StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
@@ -65,7 +66,7 @@ public class GameEvent {
 
                                         }
                                     } else {
-                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName());
+                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""));
                                         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
                                         if (map != null && !map.isEmpty()) {
                                             ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
@@ -80,8 +81,8 @@ public class GameEvent {
                         }
                     }
                     for (NetworkPlayerInfo networkInfo : copy) {
-                        if (!playerList.contains(networkInfo.getGameProfile().getName())) {
-                            playerList.add(networkInfo.getGameProfile().getName());
+                        if (!playerList.contains(networkInfo.getGameProfile().getId().toString().replace("-", ""))) {
+                            playerList.add(networkInfo.getGameProfile().getId().toString().replace("-", ""));
                             if (someoneHas1Ping && networkInfo.getResponseTime() > 1) {
                                 continue;
                             }
