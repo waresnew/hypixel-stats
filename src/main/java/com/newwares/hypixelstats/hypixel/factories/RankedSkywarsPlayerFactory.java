@@ -30,7 +30,7 @@ public class RankedSkywarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, RankedSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS);
+                RankedSkywarsPlayer player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS.name());
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
@@ -48,7 +48,7 @@ public class RankedSkywarsPlayerFactory extends PlayerFactory {
                     if (skywarsObject.has("losses_ranked"))
                         player.setLosses(skywarsObject.get("losses_ranked").getAsInt());
                 } else {
-                    player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS);
+                    player = new RankedSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.RANKED_SKYWARS.name());
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

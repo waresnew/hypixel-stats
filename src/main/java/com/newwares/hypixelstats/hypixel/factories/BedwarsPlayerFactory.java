@@ -29,7 +29,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, BedwarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                BedwarsPlayer player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS);
+                BedwarsPlayer player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS.name());
                 if (statJsonObject.has("Bedwars")) {
                     JsonObject bedwarsObject = statJsonObject.get("Bedwars").getAsJsonObject();
                     setMainStats(playerJsonObject, player);
@@ -57,7 +57,7 @@ public class BedwarsPlayerFactory extends PlayerFactory {
                     if (bedwarsObject.has("beds_lost_bedwars"))
                         player.setBedLosses(bedwarsObject.get("beds_lost_bedwars").getAsInt());
                 } else {
-                    player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS);
+                    player = new BedwarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.BEDWARS.name());
                     PlayerCache.getInstance().updateCache(uuid, player);
                 }
 

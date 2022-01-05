@@ -23,7 +23,7 @@ public class HypixelApi {
             Method createPlayerMethod = factory.getMethod("createPlayer", JsonObject.class, String.class, String.class);
             Method getInstanceMethod = factory.getMethod("getInstance");
             Player player = (Player) createPlayerMethod.invoke(getInstanceMethod.invoke(null), jsonObject, uuid, username);
-            if (game == player.getMode()) {
+            if (game.getType().isInstance(player)) {
                 toReturn = player;
             }
         }

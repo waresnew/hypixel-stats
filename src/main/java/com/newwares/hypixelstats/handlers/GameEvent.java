@@ -3,6 +3,7 @@ package com.newwares.hypixelstats.handlers;
 import com.google.gson.JsonObject;
 import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.config.NickCache;
+import com.newwares.hypixelstats.hypixel.Player;
 import com.newwares.hypixelstats.mixins.pseudo.DenickerInvoker;
 import com.newwares.hypixelstats.utils.*;
 import net.minecraft.client.Minecraft;
@@ -55,26 +56,25 @@ public class GameEvent {
                                 try {
                                     String[] result = DenickerInvoker.denick(networkInfo.getGameProfile());
                                     if (result != null) {
-                                        ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked! (" + result[0] + ")");
-                                        NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""), result[1]);
                                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                             try {
-                                                StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
+                                                Player player = StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
+                                                if (!player.getRankColour().name().matches("GREEN|AQUA|GREY")) {
+                                                    NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""), result[1]);
+                                                    ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked! (" + result[0] + ")");
+                                                    StatDisplayUtils.printStats(player);
+                                                } else {
+                                                    retrieveNickCache(networkInfo);
+                                                }
                                             } catch (IOException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                                                 e.printStackTrace();
                                             }
 
                                         }
                                     } else {
-                                        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""));
-                                        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
-                                        if (map != null && !map.isEmpty()) {
-                                            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
-                                        } else {
-                                            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked!");
-                                        }
+                                        retrieveNickCache(networkInfo);
                                     }
-                                } catch (IllegalStateException | IOException ignored) {
+                                } catch (IllegalStateException ignored) {
                                     ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked!");
                                 }
                             }
@@ -88,7 +88,7 @@ public class GameEvent {
                             }
                             if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                 try {
-                                    StatDisplayUtils.stat(gametype, mode, networkInfo.getGameProfile().getId().toString(), networkInfo.getGameProfile().getName());
+                                    StatDisplayUtils.printStats(StatDisplayUtils.stat(gametype, mode, networkInfo.getGameProfile().getId().toString(), networkInfo.getGameProfile().getName()));
                                 } catch (IOException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -98,6 +98,16 @@ public class GameEvent {
                     }
                 }).start();
             }
+        }
+    }
+
+    private void retrieveNickCache(NetworkPlayerInfo networkInfo) {
+        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""));
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+        if (map != null && !map.isEmpty()) {
+            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");
+        } else {
+            ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked!");
         }
     }
 

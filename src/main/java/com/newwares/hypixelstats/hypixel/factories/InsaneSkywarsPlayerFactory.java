@@ -30,7 +30,7 @@ public class InsaneSkywarsPlayerFactory extends PlayerFactory {
             if (PlayerCache.getInstance().getCache(uuid, InsaneSkywarsPlayer.class) == null) {
                 JsonObject playerJsonObject = jsonObject.get("player").getAsJsonObject();
                 JsonObject statJsonObject = playerJsonObject.get("stats").getAsJsonObject();
-                InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.INSANE_SKYWARS);
+                InsaneSkywarsPlayer player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.INSANE_SKYWARS.name());
 
                 if (statJsonObject.has("SkyWars")) {
                     JsonObject skywarsObject = statJsonObject.get("SkyWars").getAsJsonObject();
@@ -57,7 +57,7 @@ public class InsaneSkywarsPlayerFactory extends PlayerFactory {
                         player.setLosses(player.getLosses() + skywarsObject.get("losses_team_insane").getAsInt());
 
                 } else {
-                    player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.INSANE_SKYWARS);
+                    player = new InsaneSkywarsPlayer(uuid, playerJsonObject.get("displayname").getAsString(), GameMode.INSANE_SKYWARS.name());
                     PlayerCache.getInstance().updateCache(uuid, player);
 
                 }

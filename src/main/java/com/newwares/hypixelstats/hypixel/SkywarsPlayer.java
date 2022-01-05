@@ -6,7 +6,7 @@ public abstract class SkywarsPlayer extends Player {
     private String skywarsLevel = ChatColour.GREY + "0☆";
     private String currentKit = "Default";
 
-    public SkywarsPlayer(String uuid, String username, GameMode mode) {
+    public SkywarsPlayer(String uuid, String username, String mode) {
         super(uuid, username, mode);
     }
 

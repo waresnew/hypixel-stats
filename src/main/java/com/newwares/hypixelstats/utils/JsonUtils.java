@@ -2,6 +2,9 @@ package com.newwares.hypixelstats.utils;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import com.newwares.hypixelstats.hypixel.GameMode;
+import com.newwares.hypixelstats.hypixel.Player;
 
 import java.io.*;
 import java.net.URL;
@@ -12,7 +15,11 @@ public class JsonUtils {
 
     public static Gson getGson() {
         if (gson == null) {
-            gson = new GsonBuilder().disableHtmlEscaping().create();
+            RuntimeTypeAdapterFactory<Player> adapter = RuntimeTypeAdapterFactory.of(Player.class, "mode", true);
+            for (GameMode mode : GameMode.values()) {
+                adapter.registerSubtype(mode.getType(), mode.name());
+            }
+            gson = new GsonBuilder().disableHtmlEscaping().registerTypeAdapterFactory(adapter).create();
         }
         return gson;
     }

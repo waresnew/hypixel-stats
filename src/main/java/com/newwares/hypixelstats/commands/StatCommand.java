@@ -76,23 +76,23 @@ public class StatCommand extends CommandBase {
                     }
                     switch (args[0]) {
                         case "bw": {
-                            StatDisplayUtils.stat("BEDWARS", "a", uuid, username);
+                            StatDisplayUtils.printStats(StatDisplayUtils.stat("BEDWARS", "a", uuid, username));
                             break;
                         }
                         case "nsw": {
-                            StatDisplayUtils.stat("SKYWARS", "solo_normal", uuid, username);
+                            StatDisplayUtils.printStats(StatDisplayUtils.stat("SKYWARS", "solo_normal", uuid, username));
                             break;
                         }
                         case "isw": {
-                            StatDisplayUtils.stat("SKYWARS", "solo_insane", uuid, username);
+                            StatDisplayUtils.printStats(StatDisplayUtils.stat("SKYWARS", "solo_insane", uuid, username));
                             break;
                         }
                         case "rsw": {
-                            StatDisplayUtils.stat("SKYWARS", "ranked_normal", uuid, username);
+                            StatDisplayUtils.printStats(StatDisplayUtils.stat("SKYWARS", "ranked_normal", uuid, username));
                             break;
                         }
                         case "uhc": {
-                            StatDisplayUtils.stat("SPEED_UHC", "a", uuid, username);
+                            StatDisplayUtils.printStats(StatDisplayUtils.stat("SPEED_UHC", "a", uuid, username));
                             break;
                         }
                     }
