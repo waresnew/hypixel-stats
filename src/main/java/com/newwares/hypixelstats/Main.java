@@ -48,6 +48,10 @@ public class Main {
         ConcurrentHashMap<String, ConcurrentHashMap<String, Player>> cache = PlayerCache.getInstance().getCache();
         ArrayList<String> toRemove = new ArrayList<>();
         for (Map.Entry<String, ConcurrentHashMap<String, Player>> entry : cache.entrySet()) {
+            if (entry.getValue().isEmpty()) {
+                toRemove.add(entry.getKey());
+                continue;
+            }
             for (Player player : entry.getValue().values()) {
                 if (System.currentTimeMillis() - player.getTimeCreated() >= 4 * 24 * 60 * 60 * 1000) {
                     toRemove.add(entry.getKey());
