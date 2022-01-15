@@ -53,7 +53,7 @@ public class StatCommand extends CommandBase {
             try {
                 String username = args[1];
                 if (args[0].equals("nicks")) {
-                    TreeMap<String, Long> uuids = NickCache.getInstance().getCache(username);
+                    TreeMap<String, Long> uuids = NickCache.getInstance().sortByValue(NickCache.getInstance().getCache(username));
                     StringBuilder uuidList = new StringBuilder();
                     if (uuids == null) {
                         ChatUtils.print(ChatColour.RED+"No usernames found.");

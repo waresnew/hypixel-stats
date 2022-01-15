@@ -102,7 +102,7 @@ public class GameEvent {
     }
 
     private void retrieveNickCache(NetworkPlayerInfo networkInfo) {
-        TreeMap<String, Long> map = NickCache.getInstance().getCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""));
+        TreeMap<String, Long> map = NickCache.getInstance().sortByValue(NickCache.getInstance().getCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", "")));
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
         if (map != null && !map.isEmpty()) {
             ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + "is nicked! (" + MojangApi.uuidToUsername(map.firstKey()) + " " + format.format(new Date(map.firstEntry().getValue())) + ")");

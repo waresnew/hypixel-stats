@@ -8,18 +8,18 @@ import com.newwares.hypixelstats.utils.JsonUtils;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerCache {
     private static PlayerCache playerCache;
     private File cacheFile;
 
-    private HashMap<String, HashMap<String, Player>> nameCache = new HashMap<>();
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, Player>> nameCache = new ConcurrentHashMap<>();
 
     private PlayerCache() {
     }
 
-    public HashMap<String, HashMap<String, Player>> getCache() {
+    public ConcurrentHashMap<String, ConcurrentHashMap<String, Player>> getCache() {
         return nameCache;
     }
 
@@ -36,31 +36,31 @@ public class PlayerCache {
             new File(directory.getPath() + "\\HypixelStats").mkdir();
         }
         cacheFile = new File(directory.getPath() + "\\HypixelStats\\cache.json");
-        if (!cacheFile.exists()) {
-            cacheFile.createNewFile();
-            FileWriter fileWriter = new FileWriter(cacheFile);
+        if (!getCacheFile().exists()) {
+            getCacheFile().createNewFile();
+            FileWriter fileWriter = new FileWriter(getCacheFile());
             fileWriter.write("{}");
             fileWriter.flush();
             fileWriter.close();
         }
-        FileReader fileReader = new FileReader(cacheFile);
+        FileReader fileReader = new FileReader(getCacheFile());
         StringBuilder json = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             json.append(line);
         }
-        Type type = new TypeToken<HashMap<String, HashMap<String, Player>>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, Player>>>() {
         }.getType();
         nameCache = JsonUtils.getGson().fromJson(json.toString(), type);
     }
 
     public void updateCache(String uuid, Player player) throws IOException {
-        nameCache.computeIfAbsent(uuid, k -> new HashMap<>());
+        nameCache.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>());
         nameCache.get(uuid).put(player.getClass().getSimpleName(), player);
-        FileWriter fileWriter = new FileWriter(cacheFile);
+        FileWriter fileWriter = new FileWriter(getCacheFile());
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        HashMap<String, HashMap<String, Player>> copy = new HashMap<>(nameCache);
+        ConcurrentHashMap<String, ConcurrentHashMap<String, Player>> copy = new ConcurrentHashMap<>(nameCache);
         JsonUtils.getGson().toJson(copy, bufferedWriter);
         bufferedWriter.close();
     }
@@ -69,16 +69,16 @@ public class PlayerCache {
      * adds a default player (stats are all 0)
      */
     public void updateCache(String uuid, String username, GameMode player) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        nameCache.computeIfAbsent(uuid, k -> new HashMap<>());
+        nameCache.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>());
         updateCache(uuid, player.getType().getConstructor(String.class, String.class).newInstance(uuid, username));
     }
 
     public void removePlayer(String uuid) {
         nameCache.remove(uuid);
         try {
-            FileWriter fileWriter = new FileWriter(cacheFile);
+            FileWriter fileWriter = new FileWriter(getCacheFile());
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            HashMap<String, HashMap<String, Player>> copy = new HashMap<>(nameCache);
+            ConcurrentHashMap<String, ConcurrentHashMap<String, Player>> copy = new ConcurrentHashMap<>(nameCache);
             JsonUtils.getGson().toJson(copy, bufferedWriter);
             bufferedWriter.close();
         } catch (IOException ex) {
@@ -86,11 +86,15 @@ public class PlayerCache {
         }
     }
 
-    public <T extends Player> T getCache(String uuid, Class<T> type) throws IOException {
+    public <T extends Player> T getCache(String uuid, Class<T> type) {
         if (nameCache.get(uuid) != null) {
             return type.cast(nameCache.get(uuid).get(type.getSimpleName()));
         } else {
             return null;
         }
+    }
+
+    public File getCacheFile() {
+        return cacheFile;
     }
 }

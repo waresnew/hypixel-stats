@@ -8,10 +8,11 @@ import java.lang.reflect.Type;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NickCache {
     private static NickCache instance;
-    private HashMap<String, TreeMap<String, Long>> nickCache = new HashMap<>();
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, Long>> nickCache = new ConcurrentHashMap<>();
     private File nickFile;
 
     private NickCache() {
@@ -46,22 +47,22 @@ public class NickCache {
         while ((line = bufferedReader.readLine()) != null) {
             json.append(line);
         }
-        Type type = new TypeToken<HashMap<String, TreeMap<String, Long>>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>>() {
         }.getType();
         nickCache = JsonUtils.getGson().fromJson(json.toString(), type);
     }
 
     public void updateCache(String nick, String uuid) throws IOException {
-        nickCache.computeIfAbsent(nick, k -> new TreeMap<>());
+        nickCache.computeIfAbsent(nick, k -> new ConcurrentHashMap<>());
         nickCache.get(nick).put(uuid, System.currentTimeMillis());
-        nickCache.put(nick, sortByValue(nickCache.get(nick)));
+        nickCache.put(nick, nickCache.get(nick));
         FileWriter fileWriter = new FileWriter(nickFile);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         JsonUtils.getGson().toJson(nickCache, bufferedWriter);
         bufferedWriter.close();
     }
 
-    public TreeMap<String, Long> getCache(String nick) {
+    public ConcurrentHashMap<String, Long> getCache(String nick) {
         for (String key : nickCache.keySet()) {
             if (key.equalsIgnoreCase(nick)) {
                 return nickCache.get(key);
@@ -70,10 +71,10 @@ public class NickCache {
         return nickCache.get(nick);
     }
 
-    private TreeMap<String, Long> sortByValue(TreeMap<String, Long> treeMap) {
-        Comparator<String> uuidDateComparator = Comparator.comparing(treeMap::get);
+    public TreeMap<String, Long> sortByValue(ConcurrentHashMap<String, Long> map) {
+        Comparator<String> uuidDateComparator = Comparator.comparing(map::get);
         TreeMap<String, Long> sorted = new TreeMap<>(uuidDateComparator.reversed());
-        sorted.putAll(treeMap);
+        sorted.putAll(map);
         return sorted;
     }
 }
