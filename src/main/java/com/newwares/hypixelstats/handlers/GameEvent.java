@@ -144,13 +144,6 @@ public class GameEvent {
                 mode = jsonObject[0].get("mode").getAsString();
                 gametype = jsonObject[0].get("gametype").getAsString();
             }).start();
-        } else if (msg.startsWith("Your new API key is")) {
-            try {
-                ModConfig.getInstance().setApiKey(msg.replace("Your new API key is ", ""));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ChatUtils.print(ChatColour.GREEN + "HypixelStats found and set hypixel key");
         }
     }
 
