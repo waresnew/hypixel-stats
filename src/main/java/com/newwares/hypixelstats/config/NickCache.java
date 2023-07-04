@@ -72,6 +72,9 @@ public class NickCache {
     }
 
     public TreeMap<String, Long> sortByValue(ConcurrentHashMap<String, Long> map) {
+        if (map == null) {
+            return null;
+        }
         Comparator<String> uuidDateComparator = Comparator.comparing(map::get);
         TreeMap<String, Long> sorted = new TreeMap<>(uuidDateComparator.reversed());
         sorted.putAll(map);

@@ -5,7 +5,7 @@ import java.net.URL;
 public class MojangApi {
     public static String usernameToUuid(String username) {
         try {
-            return JsonUtils.parseJson(new URL(String.format("https://api.ashcon.app/mojang/v2/user/%s", username))).getAsJsonObject().get("uuid").getAsString();
+            return JsonUtils.parseJson(new URL(String.format("https://api.mojang.com/users/profiles/minecraft/%s", username))).getAsJsonObject().get("id").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -13,7 +13,7 @@ public class MojangApi {
 
     public static String uuidToUsername(String uuid) {
         try {
-            return JsonUtils.parseJson(new URL(String.format("https://api.ashcon.app/mojang/v2/user/%s", uuid))).getAsJsonObject().get("username").getAsString();
+            return JsonUtils.parseJson(new URL(String.format("https://api.mojang.com/user/profile/%s", uuid))).getAsJsonObject().get("name").getAsString();
         } catch (Exception e) {
             return null;
         }

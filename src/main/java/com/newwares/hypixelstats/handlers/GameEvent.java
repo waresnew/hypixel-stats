@@ -59,7 +59,7 @@ public class GameEvent {
                                         if ((gametype != null) && (gametype.equals("BEDWARS") || gametype.equals("SPEED_UHC") || gametype.equals("SKYWARS"))) {
                                             try {
                                                 Player player = StatDisplayUtils.stat(gametype, mode, result[1], result[0]);
-                                                if (!player.getRankColour().name().matches("GREEN|AQUA|GREY")) {
+                                                if (player != null && !player.getRankColour().name().matches("GREEN|AQUA|GREY")) {
                                                     NickCache.getInstance().updateCache(networkInfo.getGameProfile().getName().replaceAll("§[0123456789abcdefklmnor]", ""), result[1]);
                                                     ChatUtils.print(ChatColour.RED + networkInfo.getGameProfile().getName() + " is nicked! (" + result[0] + ")");
                                                     StatDisplayUtils.printStats(player);

@@ -31,7 +31,7 @@ public abstract class PlayerFactory {
             return false;
         }
         JsonElement playerJsonObject = jsonObject.get("player");
-        if (playerJsonObject == null) {
+        if (playerJsonObject == null || !playerJsonObject.isJsonObject()) {
             return false;
         }
         GameMode type = GameMode.valueOf(game);
