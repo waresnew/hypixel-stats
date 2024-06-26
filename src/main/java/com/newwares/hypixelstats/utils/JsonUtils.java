@@ -3,11 +3,13 @@ package com.newwares.hypixelstats.utils;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import com.newwares.hypixelstats.config.ModConfig;
 import com.newwares.hypixelstats.hypixel.GameMode;
 import com.newwares.hypixelstats.hypixel.Player;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
 public class JsonUtils {
@@ -24,11 +26,17 @@ public class JsonUtils {
         return gson;
     }
 
-
     public static JsonElement parseJson(URL url) throws IOException {
+        return parseJson(url, false);
+    }
+    public static JsonElement parseJson(URL url,boolean useApiKey ) throws IOException {
         JsonElement jsonElement;
         JsonParser parser = new JsonParser();
-        InputStream inputStream = url.openStream();
+        URLConnection connection = url.openConnection();
+        if (useApiKey) {
+            connection.setRequestProperty("Api-Key", ModConfig.getInstance().getApiKey());
+        }
+        InputStream inputStream = connection.getInputStream();
         JsonElement result = parser.parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         inputStream.close();
         jsonElement = result;

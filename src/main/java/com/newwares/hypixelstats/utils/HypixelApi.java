@@ -15,7 +15,7 @@ public class HypixelApi {
 
 
     public static Player setStats(GameMode game, String uuid, String username) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?key=%s&uuid=%s", ModConfig.getInstance().getApiKey(), uuid))).getAsJsonObject();
+        JsonObject jsonObject = JsonUtils.parseJson(new URL(String.format("https://api.hypixel.net/player?uuid=%s", uuid)), true).getAsJsonObject();
         System.out.println("HypixelStats checking: " + uuid);
         Player toReturn = null;
         for (GameMode gameMode : GameMode.values()) {
